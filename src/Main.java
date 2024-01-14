@@ -3,3 +3,5 @@ public class Main {
         Start start=new Start();
     }
 }
+
+//Hello start game from this page
