@@ -9,17 +9,20 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 public class Blue extends RoomItems   {
     JFrame baseFrame;
+    JPanel startPanel;
     JPanel roomPanel;
     private int appNum=0;
-    private int key=1;
+    private int key=0;
     private int scissors=0;
+    int num;
     private JPanel deskPanel; //preserve big ones to not have to recreate them every time
     private JPanel closetPanel;
     private JPanel carpetPanel;
 
-    Blue(JFrame frame, JPanel panel){
+    Blue(JFrame frame, JPanel panel, JPanel start){
         super(frame, panel);
         roomPanel=panel;
+        startPanel=start;
         JButton door=this.createButton("doorEx.png",400,20,panel);
         door.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -28,67 +31,57 @@ public class Blue extends RoomItems   {
         });
     }
     private void doorClicked(){
-        JPanel doorPanel=showImage("doorUpEx.png");
+        JPanel doorPanel=showImage("doorUpEx.png",roomPanel);
         if (key==0){
-            this.catText("hm...... looks like i need a key to open this door.", "catTalkEx.png", "OK",doorPanel,roomPanel );
+            JButton okButton=new JButton("OK");
+            JDialog keyDialog=this.catText("hm...... looks like i need a key to open this door.", "catTalkEx.png", okButton );
+            okButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    doorPanel.setVisible(false);
+                    roomPanel.setVisible(true);
+                    keyDialog.dispose(); // Close the dialog
+                }
+            });
         }
         else{
+            num=0;
             int answer=JOptionPane.showConfirmDialog(doorPanel,"You have a key. Use it ?", "Door", YES_NO_OPTION );
             if(answer==JOptionPane.YES_OPTION){
-                doorPanel.setVisible(false);
-                JPanel free=showImage("freeEx.png");
-                JPanel wait=showImage("waitEx.png");
-                JPanel end=showImage("endEx.png");
-                this.catText("yay ! i'm finally free !!!!!!", "catTalkEx.png", "NEXT",free,wait);
-
-                this.catText("wait....... what ?","catTalk.png", "NEXT",wait, end);
+                JPanel free=showImage("freeEx.png",doorPanel);
+                JButton nextButton=new JButton("NEXT");
+                JDialog freeDialog=catText("yay ! i'm finally free !!!!!!", "catTalkEx.png", nextButton);
+                nextButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        freeDialog.dispose(); // Close the dialog
+                        JPanel wait=showImage("waitEx.png",free);
+                        JButton next2Button = new JButton("NEXT");
+                        JDialog waitDialog=catText("wait....... what ?", "catTalkEx.png", next2Button);
+                        next2Button.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                waitDialog.dispose();
+                                JPanel end=showImage("endEx.png",wait);
+                                JButton leave=createButton("awakeEx.png",200,300,end);
+                                leave.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        end.setVisible(false);
+                                        startPanel.setVisible(true);
+                                    }
+                                });
+                            }
+                        });
+                        waitDialog.setVisible(true);
+                    }
+                });
             }
             else if(answer==JOptionPane.NO_OPTION){
                 doorPanel.setVisible(false);
                 roomPanel.setVisible(true);
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
             }
-            /*JButton yesButton=new JButton("YES");
-            JButton noButton=new JButton("NO");
-            JDialog dialog = new JDialog(frame, "Door");
-            dialog.setLayout(new GridLayout(3,3,20,20));
-            dialog.setPreferredSize(new Dimension(600, 300)); //size of dialog
-            JPanel dialogPanel=new JPanel();
-            JLabel text=new JLabel("You have a key. Do you want to use it ?");
-            dialogPanel.add(text);
-            dialog.add(dialogPanel);
-            dialog.add(yesButton);
-            dialog.add(noButton);
-            noButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    doorPanel.setVisible(false);
-                    roomPanel.setVisible(true);
-                    dialog.dispose(); // Close the dialog
-                }
-            });
-            noButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dialog.dispose(); // Close the dialog
-                }
-            });
-            yesButton.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e){
-                    doorPanel.setVisible(false);
-                    JPanel free=showImage("freeEx.png");
-                    JPanel wait=showImage("waitEx.png");
-                    JPanel end=showImage("endEx.png");
-                    this.catText("yay ! i'm finally free !!!!!!", "catTalkEx.png", "NEXT",free,wait);
-                    this.catText("wait....... what ?","catTalk.png", "NEXT",wait, end);
-                }
-                private void catText(String s, String image, String next, JPanel free, JPanel wait) {
-                }
-            });
-            dialog.pack();
-            dialog.setLocationRelativeTo(null); // Center the dialog on the screen
-            dialog.setVisible(true);*/
         }
     }
 }

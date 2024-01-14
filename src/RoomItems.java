@@ -11,7 +11,7 @@ public class RoomItems {
         frame=baseFrame;
         roomPanel=panel;
     }
-    protected JPanel showImage(String imageName){
+    protected JPanel showImage(String imageName,JPanel ogPanel){
         JPanel imagePanel=new JPanel();
         imagePanel.setSize(800,600);
         ImageIcon image = new ImageIcon(getClass().getResource(imageName));
@@ -20,7 +20,7 @@ public class RoomItems {
         image = new ImageIcon(newimg);
         imagePanel.add(new JLabel(image));
         frame.add(imagePanel);
-        roomPanel.setVisible(false);
+        ogPanel.setVisible(false);
         return imagePanel;
     }
     protected JButton createButton(String imageName, int x, int y, JPanel panel){
@@ -33,8 +33,7 @@ public class RoomItems {
         panel.add(button);
         return button;
     }
-    protected void catText(String message, String imageName,String buttonLabel, JPanel ogPanel, JPanel newPanel){
-        JButton button=new JButton(buttonLabel);
+    protected JDialog catText(String message, String imageName,JButton button){
         JDialog catDialog = new JDialog(frame, "You");
         ImageIcon cat=new ImageIcon(getClass().getResource(imageName));
         catDialog.setLayout(new BorderLayout());
@@ -46,17 +45,10 @@ public class RoomItems {
         catPanel.add(textLabel);
         catDialog.add(catPanel, BorderLayout.CENTER);
         catDialog.add(button, BorderLayout.SOUTH);
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ogPanel.setVisible(false);
-                newPanel.setVisible(true);
-                catDialog.dispose(); // Close the dialog
-            }
-        });
         catDialog.pack();
         catDialog.setLocationRelativeTo(null); // Center the dialog on the screen
         catDialog.setVisible(true);
+        return catDialog;
     }
     protected void messageText(String message, String title, String buttonLabel){
 

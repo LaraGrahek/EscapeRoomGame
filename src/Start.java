@@ -82,7 +82,7 @@ public class Start {
                 roomPanel.removeAll();
                 awakeDialog.dispose(); // Close the dialog
                 roomPanel.add(new JLabel(new ImageIcon("roomEx.png")));
-                Blue blue = new Blue(frame, roomPanel);
+                Blue blue = new Blue(frame, roomPanel, startPanel);
                 Green green = new Green();
                 roomPanel.revalidate();
                 roomPanel.repaint();
