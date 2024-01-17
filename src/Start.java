@@ -11,7 +11,6 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class Start {
     JFrame frame;
-    JFrame frame2;
     JPanel startPanel;
     int num;
     Start(){
@@ -59,6 +58,7 @@ public class Start {
         JPanel roomPanel = new JPanel();
         JPanel dialogPanel = new JPanel();
         roomPanel.setSize(800, 600);
+        //roomPanel.setLayout(null);
         ImageIcon awake = new ImageIcon(getClass().getResource("awakeEx.png"));
         roomPanel.add(new JLabel(awake));
         frame.add(roomPanel);

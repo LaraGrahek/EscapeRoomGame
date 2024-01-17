@@ -13,6 +13,7 @@ public class RoomItems {
     }
     protected JPanel showImage(String imageName,JPanel ogPanel){
         JPanel imagePanel=new JPanel();
+        imagePanel.setLayout(null);
         imagePanel.setSize(800,600);
         ImageIcon image = new ImageIcon(getClass().getResource(imageName));
         Image pic = image.getImage(); // transform it
@@ -52,5 +53,15 @@ public class RoomItems {
     }
     protected void messageText(String message, String title, String buttonLabel){
 
+    }
+    protected void leaveButton(JPanel oldPanel, JPanel newPanel){
+        JButton leave=createButton("leaveEx.png",500,500,oldPanel);
+        leave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                oldPanel.setVisible(false);
+                newPanel.setVisible(true);
+            }
+        });
     }
 }
