@@ -5,33 +5,34 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 public class RoomItems {
-    protected JPanel roomPanel;
+    protected JLabel roomLabel;
     protected JFrame frame;
-    RoomItems(JFrame baseFrame, JPanel panel){
+    protected JPanel roomPanel;
+    RoomItems(JFrame baseFrame, JLabel label, JPanel panel){
         frame=baseFrame;
+        roomLabel=label;
         roomPanel=panel;
     }
-    protected JPanel showImage(String imageName,JPanel ogPanel){
-        JPanel imagePanel=new JPanel();
-        imagePanel.setLayout(null);
-        imagePanel.setSize(800,600);
+    protected JLabel showImage(String imageName,JPanel ogPanel, JPanel newPanel){
         ImageIcon image = new ImageIcon(getClass().getResource(imageName));
         Image pic = image.getImage();
         Image newimg = pic.getScaledInstance(800, 600,Image.SCALE_DEFAULT);
         image = new ImageIcon(newimg);
-        imagePanel.add(new JLabel(image));
-        frame.add(imagePanel);
+        JLabel imageLabel=new JLabel(image);
+        imageLabel.setLayout(null);
+        imageLabel.setSize(800,600);
+        newPanel.add(imageLabel);
         ogPanel.setVisible(false);
-        return imagePanel;
+        return imageLabel;
     }
-    protected JButton createButton(String imageName, int x, int y, JPanel panel){
+    protected JButton createButton(String imageName, int x, int y, JLabel label){
         JButton button=new JButton(new ImageIcon(getClass().getResource(imageName)));
         button.setBounds(x,y, button.getIcon().getIconWidth(), button.getIcon().getIconHeight());
         button.setBorderPainted(false); //maybe get rid of
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
         button.setOpaque(false);
-        panel.add(button);
+        label.add(button);
         return button;
     }
     protected JDialog catText(String message, String imageName,JButton button){
@@ -54,8 +55,8 @@ public class RoomItems {
     protected void messageText(String message, String title, String buttonLabel){
 
     }
-    protected void leaveButton(JPanel oldPanel, JPanel newPanel){
-        JButton leave=createButton("leaveEx.png",500,500,oldPanel);
+    protected void leaveButton(JPanel oldPanel, JPanel newPanel, JLabel label){
+        JButton leave=createButton("leaveEx.png",500,500,label);
         leave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

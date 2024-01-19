@@ -16,65 +16,78 @@ public class Blue extends RoomItems   {
     private int key=0;
     private int scissors=1;
     int num=0;
+    JLabel deskLabel;
+    JLabel closetLabel;
     private JPanel deskPanel; //preserve big ones to not have to recreate them every time
     private JPanel closetPanel;
     private JPanel colourPanel;
     JButton file;
+    JLabel roomLabel;
 
 
-    Blue(JFrame frame, JPanel panel, JPanel start){
-        super(frame, panel);
+    Blue(JFrame frame, JLabel label, JPanel start, JPanel panel){
+        super(frame, label,panel);
+        baseFrame=frame;
+        baseFrame.setVisible(true);
         roomPanel=panel;
         startPanel=start;
+        roomLabel=label;
+        roomLabel.setLayout(null);
         roomPanel.setLayout(null);
-        JButton door=createButton("doorEx.png",400,20,roomPanel);
+        JButton door=createButton("doorEx.png",400,20,roomLabel);
         door.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                doorClicked();
+                //doorClicked();
             }
         });
-        JButton desk=createButton("deskButtonEx.png",50,550,roomPanel);
+        JButton desk=createButton("deskButtonEx.png",100,400,roomLabel);
         desk.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 deskClicked();
             }
         });
-        JButton closet=createButton("doorEx.png",20,100,roomPanel);
+        JButton closet=createButton("doorEx.png",20,100,roomLabel);
         closet.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 closetClicked();
             }
         });
-        JButton carpet=createButton("boxEx.png",700,500,roomPanel);
+        JButton carpet=createButton("boxEx.png",700,500,roomLabel);
         carpet.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                carpetClicked();
+                //carpetClicked();
             }
         });
     }
     private void deskClicked(){
         if (deskPanel==null) {
-            deskPanel = showImage("deskEx.png", roomPanel);
+            deskPanel=new JPanel();
+            deskPanel.setSize(800, 600);
+            deskPanel.setLayout(null);
+            baseFrame.add(deskPanel);
+            deskLabel = showImage("deskEx.png",roomPanel, deskPanel);
         }
-        else{
+        else if (deskPanel!=null){
             roomPanel.setVisible(false);
             deskPanel.setVisible(true);
         }
-        JButton computer=createButton("computerEx.png",500,100,deskPanel);
-        JButton water=createButton("waterEx.png",200,450,deskPanel);
-        JButton picture=createButton("picEx.png",50,50,deskPanel);
-        leaveButton(deskPanel,roomPanel);
+        JButton computer=createButton("computerEx.png",500,100,deskLabel);
+        JButton water=createButton("waterEx.png",200,450,deskLabel);
+        JButton picture=createButton("picEx.png",50,50,deskLabel);
+        leaveButton(deskPanel,roomPanel,deskLabel);
         computer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPanel computerPanel=showImage("computerEx.png",deskPanel);
-                JButton app=createButton("leaveEx.png",500,100,computerPanel);
-                leaveButton(computerPanel,deskPanel);
+                JPanel computerPanel=new JPanel();
+                computerPanel.setLayout(null);
+                JLabel computerLabel=showImage("computerEx.png",deskPanel,computerPanel);
+                JButton app=createButton("leaveEx.png",500,100,computerLabel);
+                leaveButton(computerPanel,deskPanel,computerLabel);
                 if(appNum==0) {
                     app.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            file = createButton("catTalkEx.png", 300, 200, computerPanel);
+                            file = createButton("catTalkEx.png", 300, 200, computerLabel);
                             appNum = 1;
                             file.addActionListener(new ActionListener() {
                                 @Override
@@ -89,14 +102,18 @@ public class Blue extends RoomItems   {
         });
         water.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                JPanel waterPanel=showImage("waterEx.png",deskPanel);
-                leaveButton(waterPanel,deskPanel);
+                JPanel waterPanel=new JPanel();
+                waterPanel.setLayout(null);
+                JLabel waterLabel=showImage("waterEx.png",deskPanel,waterPanel);
+                leaveButton(waterPanel,deskPanel,waterLabel);
                 JOptionPane.showMessageDialog(deskPanel,"This is a glass of water.");
             }
         });
         picture.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                JPanel photoPanel=showImage("picEx.png",deskPanel);
+                JPanel photoPanel=new JPanel();
+                photoPanel.setLayout(null);
+                JLabel photoLabel=showImage("picEx.png",deskPanel,photoPanel);
                 JButton okButton=new JButton("OK");
                 JDialog photoDialog=catText("why am i in this photo what","catTalkEx.png",okButton);
                 okButton.addActionListener(new ActionListener(){
@@ -110,19 +127,23 @@ public class Blue extends RoomItems   {
         });
     }
     private void closetClicked(){
-        if (closetPanel==null){
-            closetPanel=showImage("deskEx.png",roomPanel);
+        if (closetPanel==null || closetLabel==null){
+            closetPanel=new JPanel();
+            closetPanel.setLayout(null);
+            closetLabel = showImage("deskEx.png",roomPanel, closetPanel);
         }
-        else if (closetPanel!=null){
+        else {
             closetPanel.setVisible(true);
             roomPanel.setVisible(false);
         }
-        JButton safe=createButton("boxEx.png",600,100,closetPanel);
-        JButton box=createButton("boxEx.png",100,400,closetPanel);
-        leaveButton(closetPanel,roomPanel);
-        safe.addActionListener(new ActionListener(){
+        JButton safe=createButton("boxEx.png",600,100,closetLabel);
+        JButton box=createButton("boxEx.png",100,400,closetLabel);
+        leaveButton(closetPanel,roomPanel,closetLabel);
+        /*safe.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                JPanel safePanel=showImage("boxEx.png",closetPanel);
+                JPanel safePanel=new JPanel();
+                safePanel.setLayout(null);
+                JPanel safePanel=showImage("boxEx.png",closetPanel,safePanel);
                 JButton nextButton=new JButton("NEXT");
                 JDialog safeDialog=catText("wow ! i have a safe just like this at home ! i need a 6 digit code.","catTalkEx.png",nextButton);
                 nextButton.addActionListener(new ActionListener(){
@@ -368,6 +389,6 @@ public class Blue extends RoomItems   {
                 roomPanel.setVisible(true);
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
             }
-        }
+        }*/
     }
 }

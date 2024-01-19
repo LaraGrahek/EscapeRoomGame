@@ -64,8 +64,11 @@ public class Start extends JPanel {
         JPanel dialogPanel = new JPanel();
         roomPanel.setSize(800, 600);
         roomPanel.setLayout(null);
+
         ImageIcon awake = new ImageIcon(getClass().getResource("awakeEx.png"));
-        roomPanel.add(new JLabel(awake));
+        JLabel awakeLabel=new JLabel(awake);
+        awakeLabel.setSize(800,600);
+        roomPanel.add(awakeLabel);
         frame.add(roomPanel);
 
         JDialog awakeDialog = new JDialog(frame, "You");
@@ -87,10 +90,13 @@ public class Start extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 roomPanel.removeAll();
                 awakeDialog.dispose();
-                ImageIcon bgImage = new ImageIcon(getClass().getResource("roomEx.png"));
-                roomPanel.add(new JLabel(bgImage));
+                ImageIcon room = new ImageIcon(getClass().getResource("roomEx.png"));
+                JLabel roomLabel=new JLabel(room);
+                roomLabel.setSize(800,600);
+                roomPanel.add(roomLabel);
+                //ImageIcon bgImage = new ImageIcon(getClass().getResource("roomEx.png"));
                 //roomPanel.setBackgroundImage("roomEx.png");
-                Blue blue = new Blue(frame, roomPanel, startPanel);
+                Blue blue = new Blue(frame, roomLabel, startPanel, roomPanel);
                 Green green = new Green();
                 roomPanel.revalidate();
                 roomPanel.repaint();
