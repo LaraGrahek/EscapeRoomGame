@@ -16,8 +16,8 @@ public class RoomItems {
         imagePanel.setLayout(null);
         imagePanel.setSize(800,600);
         ImageIcon image = new ImageIcon(getClass().getResource(imageName));
-        Image pic = image.getImage(); // transform it
-        Image newimg = pic.getScaledInstance(800, 600,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        Image pic = image.getImage();
+        Image newimg = pic.getScaledInstance(800, 600,Image.SCALE_DEFAULT);
         image = new ImageIcon(newimg);
         imagePanel.add(new JLabel(image));
         frame.add(imagePanel);

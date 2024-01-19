@@ -9,10 +9,9 @@ import javax.swing.JPanel;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
-public class Start {
+public class Start extends JPanel {
     JFrame frame;
     JPanel startPanel;
-    int num;
     Start(){
         frame=new JFrame();
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -52,16 +51,23 @@ public class Start {
             }
         });
     }
+    private void configureButton(JButton button) {
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.setOpaque(false);
+    }
 
     public void startGame() {
         startPanel.setVisible(false);
         JPanel roomPanel = new JPanel();
         JPanel dialogPanel = new JPanel();
         roomPanel.setSize(800, 600);
-        //roomPanel.setLayout(null);
+        roomPanel.setLayout(null);
         ImageIcon awake = new ImageIcon(getClass().getResource("awakeEx.png"));
         roomPanel.add(new JLabel(awake));
         frame.add(roomPanel);
+
         JDialog awakeDialog = new JDialog(frame, "You");
         awakeDialog.setLayout(new BorderLayout());
         awakeDialog.setPreferredSize(new Dimension(600, 200)); //size of dialog
@@ -69,7 +75,7 @@ public class Start {
         JLabel imageLabel = new JLabel(cat);
         dialogPanel.add(imageLabel);
         JLabel textLabel = new JLabel("ughhhghghgh where am i...???");
-        dialogPanel.add(textLabel);
+        dialogPanel.add(textLabel,BorderLayout.SOUTH);
         awakeDialog.add(dialogPanel, BorderLayout.CENTER);
         JButton next = new JButton("NEXT");
         awakeDialog.add(next, BorderLayout.SOUTH);
@@ -80,8 +86,10 @@ public class Start {
             @Override
             public void actionPerformed(ActionEvent e) {
                 roomPanel.removeAll();
-                awakeDialog.dispose(); // Close the dialog
-                roomPanel.add(new JLabel(new ImageIcon("roomEx.png")));
+                awakeDialog.dispose();
+                ImageIcon bgImage = new ImageIcon(getClass().getResource("roomEx.png"));
+                roomPanel.add(new JLabel(bgImage));
+                //roomPanel.setBackgroundImage("roomEx.png");
                 Blue blue = new Blue(frame, roomPanel, startPanel);
                 Green green = new Green();
                 roomPanel.revalidate();
