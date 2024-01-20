@@ -12,6 +12,7 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 public class Start extends JPanel {
     JFrame frame;
     JPanel startPanel;
+    JLabel startLabel;
     Start(){
         frame=new JFrame();
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -19,21 +20,24 @@ public class Start extends JPanel {
         frame.setLayout(null);
         frame.setLocationRelativeTo(null);
         startPanel=new JPanel();
-        startPanel.setLayout(new BoxLayout(startPanel, BoxLayout.Y_AXIS));
+        startPanel.setLayout(null);
         startPanel.setSize(800,600);
-        JButton play=new JButton(new ImageIcon(getClass().getResource("startEx.png")));
-        play.setBorderPainted(false);
-        play.setContentAreaFilled(false);
-        play.setFocusPainted(false);
-        play.setOpaque(false);
-        JButton instructions=new JButton(new ImageIcon(getClass().getResource("howToEx.png")));
-        instructions.setBorderPainted(false);
-        instructions.setContentAreaFilled(false);
-        instructions.setFocusPainted(false);
-        instructions.setOpaque(false);
-        startPanel.add(play);
-        startPanel.add(Box.createVerticalStrut(20));
-        startPanel.add(instructions);
+        ImageIcon image=new ImageIcon(getClass().getResource("startBg.png"));
+        Image pic = image.getImage();
+        Image newPic = pic.getScaledInstance(800, 600,Image.SCALE_DEFAULT);
+        image = new ImageIcon(newPic);
+        startLabel=new JLabel(image);
+        startLabel.setSize(800,600);
+        startLabel.setLayout(null);
+        startPanel.add(startLabel);
+        JButton play=new JButton(new ImageIcon(getClass().getResource("start.PNG")));
+        setButton(play);
+        play.setBounds(256,230,287,111);
+        JButton instructions=new JButton(new ImageIcon(getClass().getResource("howToPlay.PNG")));
+        setButton(instructions);
+        instructions.setBounds(148,350,504,123);
+        startLabel.add(play);
+        startLabel.add(instructions);
         frame.add(startPanel);
         frame.setVisible(true);
         play.addActionListener(new ActionListener(){
@@ -51,7 +55,7 @@ public class Start extends JPanel {
             }
         });
     }
-    private void configureButton(JButton button) {
+    private void setButton(JButton button) {
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
@@ -72,18 +76,25 @@ public class Start extends JPanel {
         frame.add(roomPanel);
 
         JDialog awakeDialog = new JDialog(frame, "You");
+        awakeDialog.setUndecorated(true);
         awakeDialog.setLayout(new BorderLayout());
         awakeDialog.setPreferredSize(new Dimension(600, 200)); //size of dialog
+
+        int frameX = frame.getLocation().x;
+        int frameY = frame.getLocation().y;
+        int dialogX = frameX+(200) / 2;
+        int dialogY = frameY+350;
+
+        awakeDialog.setLocation(dialogX,dialogY);
         ImageIcon cat = new ImageIcon(getClass().getResource("catTalkEx.png"));
         JLabel imageLabel = new JLabel(cat);
-        dialogPanel.add(imageLabel);
+        dialogPanel.add(imageLabel,BorderLayout.CENTER);
         JLabel textLabel = new JLabel("ughhhghghgh where am i...???");
         dialogPanel.add(textLabel,BorderLayout.SOUTH);
         awakeDialog.add(dialogPanel, BorderLayout.CENTER);
         JButton next = new JButton("NEXT");
         awakeDialog.add(next, BorderLayout.SOUTH);
         awakeDialog.pack();
-        awakeDialog.setLocationRelativeTo(null); // Center the dialog on the screen
         awakeDialog.setVisible(true);
         next.addActionListener(new ActionListener() {
             @Override

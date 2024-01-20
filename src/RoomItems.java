@@ -6,10 +6,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 public class RoomItems {
     protected JLabel roomLabel;
-    protected JFrame frame;
+    protected JFrame baseFrame;
     protected JPanel roomPanel;
-    RoomItems(JFrame baseFrame, JLabel label, JPanel panel){
-        frame=baseFrame;
+    RoomItems(JFrame frame, JLabel label, JPanel panel){
+        baseFrame=frame;
         roomLabel=label;
         roomPanel=panel;
     }
@@ -18,11 +18,28 @@ public class RoomItems {
         Image pic = image.getImage();
         Image newimg = pic.getScaledInstance(800, 600,Image.SCALE_DEFAULT);
         image = new ImageIcon(newimg);
+
+        newPanel.setSize(800, 600);
+        newPanel.setLayout(null);
+        baseFrame.add(newPanel);
+
         JLabel imageLabel=new JLabel(image);
         imageLabel.setLayout(null);
         imageLabel.setSize(800,600);
         newPanel.add(imageLabel);
         ogPanel.setVisible(false);
+        return imageLabel;
+    }
+    protected JLabel showImage(String imageName,JPanel panel){
+        ImageIcon image = new ImageIcon(getClass().getResource(imageName));
+        Image pic = image.getImage();
+        Image newimg = pic.getScaledInstance(800, 600,Image.SCALE_DEFAULT);
+        image = new ImageIcon(newimg);
+
+        JLabel imageLabel=new JLabel(image);
+        imageLabel.setLayout(null);
+        imageLabel.setSize(800,600);
+        panel.add(imageLabel);
         return imageLabel;
     }
     protected JButton createButton(String imageName, int x, int y, JLabel label){
@@ -36,7 +53,7 @@ public class RoomItems {
         return button;
     }
     protected JDialog catText(String message, String imageName,JButton button){
-        JDialog catDialog = new JDialog(frame, "You");
+        JDialog catDialog = new JDialog(baseFrame, "You");
         ImageIcon cat=new ImageIcon(getClass().getResource(imageName));
         catDialog.setLayout(new BorderLayout());
         catDialog.setPreferredSize(new Dimension(600, 300)); //size of dialog
