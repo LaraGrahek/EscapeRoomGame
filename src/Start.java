@@ -79,7 +79,7 @@ public class Start extends JPanel {
         frame.add(roomPanel);
 
         JDialog awakeDialog = new JDialog(frame, "You");
-        awakeDialog.setUndecorated(true);
+        awakeDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         awakeDialog.setLayout(new BorderLayout());
         awakeDialog.setPreferredSize(new Dimension(600, 200)); //size of dialog
 
@@ -122,9 +122,13 @@ public class Start extends JPanel {
     public void howToPlay() throws IOException {
         JPanel instructionPanel=new JPanel(new FlowLayout());
         JDialog instructionDialog = new JDialog(frame, "How To Play", false);
-        instructionDialog.setPreferredSize(new Dimension(400, 300)); //size of dialog
+        instructionDialog.setPreferredSize(new Dimension(450, 260)); //size of dialog
         instructionDialog.setLayout(new BorderLayout());
-        JLabel label=new JLabel(new ImageIcon(getClass().getResource("InstructionEx.png")));
+        ImageIcon insBg = new ImageIcon(getClass().getResource("instructions.png"));
+        Image insImg = (insBg).getImage();
+        Image newImg = insImg.getScaledInstance(450, 240,Image.SCALE_DEFAULT);
+        insBg = new ImageIcon(newImg);
+        JLabel label=new JLabel(insBg);
         instructionPanel.add(label);
         instructionDialog.add(instructionPanel, BorderLayout.CENTER);
         instructionDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

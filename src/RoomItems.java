@@ -40,6 +40,7 @@ public class RoomItems {
         JLabel imageLabel=new JLabel(image);
         imageLabel.setLayout(null);
         imageLabel.setSize(800,600);
+        imageLabel.setVisible(true);
         panel.add(imageLabel);
         return imageLabel;
     }
@@ -65,15 +66,33 @@ public class RoomItems {
         catPanel.add(textLabel);
 
         int frameX = baseFrame.getLocation().x+100;
-        int frameY = baseFrame.getLocation().y+220;
+        int frameY = baseFrame.getLocation().y+350;
 
         catDialog.setLocation(frameX,frameY);
-        catDialog.setUndecorated(true);
+        catDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         catDialog.add(catPanel, BorderLayout.CENTER);
         catDialog.add(button, BorderLayout.SOUTH);
         catDialog.pack();
         catDialog.setVisible(true);
         return catDialog;
+    }
+    protected JDialog msgText(String message, String title, JButton button){
+        JDialog msgDialog=new JDialog(baseFrame,title);
+        msgDialog.setPreferredSize(new Dimension(500, 100)); //size of dialog
+        msgDialog.setLayout(new BorderLayout());
+        JPanel msgPanel=new JPanel();
+        msgPanel.add(new JLabel(message));
+
+        int frameX = baseFrame.getLocation().x+150;
+        int frameY = baseFrame.getLocation().y+450;
+
+        msgDialog.setLocation(frameX,frameY);
+        msgDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        msgDialog.add(msgPanel);
+        msgDialog.add(button,BorderLayout.SOUTH);
+        msgDialog.pack();
+        msgDialog.setVisible(true);
+        return msgDialog;
     }
 
     protected void leaveButton(JPanel oldPanel, JPanel newPanel, JLabel label){
