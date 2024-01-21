@@ -8,6 +8,7 @@ public class RoomItems {
     protected JLabel roomLabel;
     protected JFrame baseFrame;
     protected JPanel roomPanel;
+
     RoomItems(JFrame frame, JLabel label, JPanel panel){
         baseFrame=frame;
         roomLabel=label;
@@ -16,7 +17,7 @@ public class RoomItems {
     protected JLabel showImage(String imageName,JPanel ogPanel, JPanel newPanel){
         ImageIcon image = new ImageIcon(getClass().getResource(imageName));
         Image pic = image.getImage();
-        Image newimg = pic.getScaledInstance(800, 600,Image.SCALE_DEFAULT);
+        Image newimg = pic.getScaledInstance(800, 600,Image.SCALE_SMOOTH);
         image = new ImageIcon(newimg);
 
         newPanel.setSize(800, 600);
@@ -33,7 +34,7 @@ public class RoomItems {
     protected JLabel showImage(String imageName,JPanel panel){
         ImageIcon image = new ImageIcon(getClass().getResource(imageName));
         Image pic = image.getImage();
-        Image newimg = pic.getScaledInstance(800, 600,Image.SCALE_DEFAULT);
+        Image newimg = pic.getScaledInstance(800, 600,Image.SCALE_FAST);
         image = new ImageIcon(newimg);
 
         JLabel imageLabel=new JLabel(image);
@@ -56,22 +57,25 @@ public class RoomItems {
         JDialog catDialog = new JDialog(baseFrame, "You");
         ImageIcon cat=new ImageIcon(getClass().getResource(imageName));
         catDialog.setLayout(new BorderLayout());
-        catDialog.setPreferredSize(new Dimension(600, 300)); //size of dialog
+        catDialog.setPreferredSize(new Dimension(600, 200)); //size of dialog
         JPanel catPanel=new JPanel();
         JLabel imageLabel=new JLabel(cat);
         catPanel.add(imageLabel);
         JLabel textLabel=new JLabel(message);
         catPanel.add(textLabel);
+
+        int frameX = baseFrame.getLocation().x+100;
+        int frameY = baseFrame.getLocation().y+220;
+
+        catDialog.setLocation(frameX,frameY);
+        catDialog.setUndecorated(true);
         catDialog.add(catPanel, BorderLayout.CENTER);
         catDialog.add(button, BorderLayout.SOUTH);
         catDialog.pack();
-        catDialog.setLocationRelativeTo(null); // Center the dialog on the screen
         catDialog.setVisible(true);
         return catDialog;
     }
-    protected void messageText(String message, String title, String buttonLabel){
 
-    }
     protected void leaveButton(JPanel oldPanel, JPanel newPanel, JLabel label){
         JButton leave=createButton("leaveEx.png",500,500,label);
         leave.addActionListener(new ActionListener() {

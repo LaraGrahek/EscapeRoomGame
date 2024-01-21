@@ -15,7 +15,7 @@ public class Blue extends RoomItems   {
     JPanel roomPanel;
     private int appNum=0;
     private int key=0;
-    private int scissors=1;
+    private int scissors=0;
     private boolean carpetDone=false;
     int num=0;
     private int bTable=0;
@@ -41,37 +41,37 @@ public class Blue extends RoomItems   {
         roomLabel=label;
         roomLabel.setLayout(null);
         roomPanel.setLayout(null);
-        JButton door=createButton("doorEx.png",400,20,roomLabel);
+        JButton door=createButton("door.PNG",210,30,roomLabel);
         door.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                //doorClicked();
+                doorClicked();
             }
         });
-        JButton desk=createButton("deskButtonEx.png",100,400,roomLabel);
+        JButton desk=createButton("desk.PNG",10,430,roomLabel);
         desk.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 deskClicked();
             }
         });
-        JButton closet=createButton("doorEx.png",20,100,roomLabel);
+        JButton closet=createButton("closet.PNG",5,20,roomLabel);
         closet.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 closetClicked();
             }
         });
-        JButton carpet=createButton("boxEx.png",700,500,roomLabel);
+        JButton carpet=createButton("carpet.PNG",450,410,roomLabel);
         carpet.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 carpetClicked();
             }
         });
-        JButton clock=createButton("clock1Ex.png",600,55,roomLabel);
+        JButton clock=createButton("clock.PNG",400,35,roomLabel);
         clock.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 clockClicked();
             }
         });
-        JButton bedTable=createButton("boxEx.png",600,200,roomLabel);
+        JButton bedTable=createButton("bedTable.PNG",430,140,roomLabel);
         bedTable.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 bedTableClicked();
@@ -145,19 +145,19 @@ public class Blue extends RoomItems   {
     private void closetClicked(){
         if (closetPanel==null || closetLabel==null){
             closetPanel=new JPanel();
-            closetLabel = showImage("deskEx.png",roomPanel, closetPanel);
+            closetLabel = showImage("closetCloser.png",roomPanel, closetPanel);
         }
         else {
             closetPanel.setVisible(true);
             roomPanel.setVisible(false);
         }
-        JButton safe=createButton("boxEx.png",600,100,closetLabel);
-        JButton box=createButton("boxEx.png",100,400,closetLabel);
+        JButton safe=createButton("safe.PNG",440,55,closetLabel);
+        JButton box=createButton("box.PNG",145,420,closetLabel);
         leaveButton(closetPanel,roomPanel,closetLabel);
         safe.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 JPanel safePanel=new JPanel();
-                JLabel safeLabel=showImage("boxEx.png",closetPanel,safePanel);
+                JLabel safeLabel=showImage("safeCloser.PNG",closetPanel,safePanel);
                 JButton nextButton=new JButton("NEXT");
                 JDialog safeDialog=catText("wow ! i have a safe just like this at home ! i need a 6 digit code.","catTalkEx.png",nextButton);
                 nextButton.addActionListener(new ActionListener(){
@@ -175,7 +175,8 @@ public class Blue extends RoomItems   {
                             closetPanel.setVisible(true);
                         }
                         else {
-                            JLabel keyLabel = showImage("picEx.png",closetPanel, safePanel);
+                            safeLabel.setVisible(false);
+                            JLabel keyLabel = showImage("key.png",safePanel);
                             JButton keyButton = new JButton("OK");
                             safeDialog.dispose();
                             JDialog keyDialog = catText("yay! a key", "catTalkEx.png", keyButton);
@@ -194,7 +195,7 @@ public class Blue extends RoomItems   {
         box.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 JPanel boxPanel=new JPanel();
-                JLabel boxLabel=showImage("boxEx.png",closetPanel,boxPanel);
+                JLabel boxLabel=showImage("boxCloser.png",closetPanel,boxPanel);
                 if (scissors==0) {
                     JButton boxButton = new JButton("NEXT");
                     JDialog boxDialog = catText("looks like it needs a 4 digit code.", "catTalkEx.png", boxButton);
@@ -210,7 +211,8 @@ public class Blue extends RoomItems   {
                                 closetPanel.setVisible(true);
                             } else {
                                 scissors = 1;
-                                JLabel scissorLabel = showImage("picEx.png", closetPanel,boxPanel);
+                                boxLabel.setVisible(false);
+                                JLabel scissorLabel = showImage("scissors.png", boxPanel);
                                 JButton scissorButton = new JButton("OK");
                                 JDialog scissorDialog = catText("who would keep scissors in a safe ??? i guess i'll take them..", "catTalkEx.png", scissorButton);
                                 scissorButton.addActionListener(new ActionListener() {
@@ -255,97 +257,103 @@ public class Blue extends RoomItems   {
             });
         }
         else if (!carpetDone){
-            if (colourPanel == null) {
-                colourPanel = new JPanel();
-                colourLabel = showImage("boxEx.png", carpetPanel, colourPanel);
-            } else {
-                colourPanel.setVisible(true);
-                carpetPanel.setVisible(false);
-            }
-            int[] colourCode = {0, 0, 0, 0, 0, 0};
-            int[] answerCode = {4, 1, 4, 3, 2, 3};
-            JButton red = createButton("redEx.png", 200, 200, colourLabel);
-            JButton yellow = createButton("yellowEx.png", 400, 200, colourLabel);
-            JButton green = createButton("greenEx.png", 200, 400, colourLabel);
-            JButton blue = createButton("blueEx.png", 400, 400, colourLabel);
-            JOptionPane.showMessageDialog(colourPanel, "Click the buttons in the correct order.");
-            red.addActionListener(new ActionListener() {
+            JButton colourButton=new JButton("OPEN");
+            JDialog colourDialog=catText("i can open this with the scissors !","catTalkEx.png",colourButton);
+            colourButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    colourDone(num);
-                    if (num > 5) {
-                        for (int i = 0; i < 6; i++) {
-                            colourCode[i] = 0;
-                        }
-                        num=1;
-                        colourCode[0] = 1;
+                    if (colourPanel == null) {
+                        colourPanel = new JPanel();
+                        colourLabel = showImage("boxEx.png", carpetPanel, colourPanel);
                     } else {
-                        colourCode[num] = 1;
-                        num++;
+                        colourPanel.setVisible(true);
+                        carpetPanel.setVisible(false);
                     }
-                    System.out.println(Arrays.toString(colourCode));
-
-                }
-            });
-            yellow.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    colourDone(num);
-                    if (num > 5) {
-                        for (int i = 0; i < 6; i++) {
-                            colourCode[i] = 0;
-                        }
-                        num=1;
-                        colourCode[0] = 2;
-                    }
-                    else {
-                        colourCode[num] = 2;
-                        num++;
-                    }
-                    System.out.println(Arrays.toString(colourCode));
-                }
-            });
-            green.addActionListener(new ActionListener() { //CHECK TO SEE TO FIX NUM=0
-                public void actionPerformed(ActionEvent e) {
-                    if (num >= 5) {
-                        if (num==5) {
-                            colourCode[5] = 3;
+                    int[] colourCode = {0, 0, 0, 0, 0, 0};
+                    int[] answerCode = {4, 1, 4, 3, 2, 3};
+                    JButton red = createButton("redEx.png", 200, 200, colourLabel);
+                    JButton yellow = createButton("yellowEx.png", 400, 200, colourLabel);
+                    JButton green = createButton("greenEx.png", 200, 400, colourLabel);
+                    JButton blue = createButton("blueEx.png", 400, 400, colourLabel);
+                    JOptionPane.showMessageDialog(colourPanel, "Click the buttons in the correct order.");
+                    red.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
                             colourDone(num);
+                            if (num > 5) {
+                                for (int i = 0; i < 6; i++) {
+                                    colourCode[i] = 0;
+                                }
+                                num=1;
+                                colourCode[0] = 1;
+                            } else {
+                                colourCode[num] = 1;
+                                num++;
+                            }
+                            System.out.println(Arrays.toString(colourCode));
+
                         }
-                        if (Arrays.equals(colourCode, answerCode)) {
-                            donePanel=new JPanel();
-                            JLabel doneLabel = showImage("colDoneEx.png",colourPanel,donePanel);
-                            leaveButton(donePanel, roomPanel, doneLabel);
-                            carpetDone=true;
+                    });
+                    yellow.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            colourDone(num);
+                            if (num > 5) {
+                                for (int i = 0; i < 6; i++) {
+                                    colourCode[i] = 0;
+                                }
+                                num=1;
+                                colourCode[0] = 2;
+                            }
+                            else {
+                                colourCode[num] = 2;
+                                num++;
+                            }
+                            System.out.println(Arrays.toString(colourCode));
                         }
-                        for (int i = 0; i < 6; i++) {
-                            colourCode[i] = 0;
+                    });
+                    green.addActionListener(new ActionListener() { //CHECK TO SEE TO FIX NUM=0
+                        public void actionPerformed(ActionEvent e) {
+                            if (num >= 5) {
+                                if (num==5) {
+                                    colourCode[5] = 3;
+                                    colourDone(num);
+                                }
+                                if (Arrays.equals(colourCode, answerCode)) {
+                                    donePanel=new JPanel();
+                                    JLabel doneLabel = showImage("colDoneEx.png",colourPanel,donePanel);
+                                    leaveButton(donePanel, roomPanel, doneLabel);
+                                    carpetDone=true;
+                                }
+                                for (int i = 0; i < 6; i++) {
+                                    colourCode[i] = 0;
+                                }
+                                num=0;
+                            }
+                            else {
+                                colourCode[num] = 3;
+                                num++;
+                            }
+                            System.out.println(Arrays.toString(colourCode));
                         }
-                        num=0;
-                    }
-                    else {
-                        colourCode[num] = 3;
-                        num++;
-                    }
-                    System.out.println(Arrays.toString(colourCode));
+                    });
+                    blue.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            colourDone(num);
+                            if (num > 5) {
+                                for (int i = 0; i < 6; i++) {
+                                    colourCode[i] = 0;
+                                }
+                                colourCode[0]=4;
+                                num=1;
+                            }
+                            else {
+                                colourCode[num] = 4;
+                                num++;
+                            }
+                            System.out.println(Arrays.toString(colourCode));
+                        }
+                    });
+                    leaveButton(colourPanel, roomPanel, colourLabel);
                 }
             });
-            blue.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    colourDone(num);
-                    if (num > 5) {
-                        for (int i = 0; i < 6; i++) {
-                            colourCode[i] = 0;
-                        }
-                        colourCode[0]=4;
-                        num=1;
-                    }
-                    else {
-                        colourCode[num] = 4;
-                        num++;
-                    }
-                    System.out.println(Arrays.toString(colourCode));
-                }
-            });
-            leaveButton(colourPanel, roomPanel, colourLabel);
         }
         else{
             donePanel.setVisible(true);
