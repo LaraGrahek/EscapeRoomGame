@@ -1,11 +1,17 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import java.io.*;
+import static java.lang.System.*;
 
 public class Blue extends RoomItems   {
     JFrame baseFrame;
@@ -13,25 +19,26 @@ public class Blue extends RoomItems   {
     JPanel roomPanel;
     private int key=0;
     private int scissors=0;
-    private boolean carpetDone=false;
-    int num=0;
+    private int carpetDone=0;
+    private int num=0;
     private int bTable=0;
-    JLabel doorLabel;
-    JLabel flashLabel;
-    JButton flashButton;
-    JLabel deskLabel;
-    JLabel closetLabel;
-    JLabel colourLabel;
-    JLabel computerLabel;
+    private JLabel doorLabel;
+    private JLabel flashLabel;
+    private JButton flashButton;
+    private JLabel deskLabel;
+    private JLabel closetLabel;
+    private JLabel colourLabel;
+    private JLabel computerLabel;
     private JPanel donePanel;
     private JPanel deskPanel; //preserve big ones to not have to recreate them every time
     private JPanel closetPanel;
     private JPanel colourPanel;
-    JButton file;
+    private JPanel pausePanel;
+    private JButton file;
     JLabel roomLabel;
 
 
-    Blue(JFrame frame, JLabel label, JPanel start, JPanel panel){
+    Blue(JFrame frame, JLabel label, JPanel start, JPanel panel, boolean save){
         super(frame, label,panel);
         baseFrame=frame;
         baseFrame.setVisible(true);
@@ -42,8 +49,28 @@ public class Blue extends RoomItems   {
         roomPanel.setLayout(null);
 
         JButton nextButton=new JButton("NEXT");
-        JDialog timeText=catText("...what time even is it?","catHm.PNG",nextButton);
+        JDialog timeText=catText("...What time even is it?","catHm.PNG",nextButton);
         nextButton.addActionListener(e -> timeText.dispose());
+
+        if (save){
+            try {
+                FileReader fr = new FileReader("SaveGame.txt");
+                BufferedReader br = new BufferedReader(fr);
+                key = Integer.parseInt(br.readLine());
+                scissors= Integer.parseInt(br.readLine());
+                carpetDone= Integer.parseInt(br.readLine());
+                br.close();
+                PrintWriter pw = new PrintWriter("SaveGame.txt"); //resets contents of the file
+                pw.close();
+            }
+            catch (IOException i){
+                System.out.print("error "+i);
+            }
+
+        }
+
+        JButton pause=createButton("pause.PNG",734,20,roomLabel);
+        pause.addActionListener(e -> pauseClicked());
 
         JButton door=createButton("door.PNG",210,30,roomLabel);
         door.addActionListener(e -> doorClicked());
@@ -62,6 +89,59 @@ public class Blue extends RoomItems   {
 
         JButton bedTable=createButton("bedTable.PNG",430,140,roomLabel);
         bedTable.addActionListener(e -> bedTableClicked());
+    }
+
+    private void pauseClicked(){
+        pausePanel=new JPanel();
+        JLabel pauseLabel=showImage("pauseBg.png",roomPanel,pausePanel);
+
+        JButton resume=createButton("resume.PNG",300,150,pauseLabel);
+        resume.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                pausePanel.setVisible(false);
+                roomPanel.setVisible(true);
+            }
+        });
+
+        JButton howTo=createButton("howToPause.PNG",265,250,pauseLabel);
+        howTo.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                JPanel instructionPanel=new JPanel(new FlowLayout());
+                JDialog instructionDialog = new JDialog(baseFrame, "How To Play", false);
+                instructionDialog.setPreferredSize(new Dimension(450, 260)); //size of dialog
+                instructionDialog.setLayout(new BorderLayout());
+                ImageIcon insBg = new ImageIcon(getClass().getResource("instructions.png"));
+                Image insImg = (insBg).getImage();
+                Image newImg = insImg.getScaledInstance(450, 240,Image.SCALE_DEFAULT);
+                insBg = new ImageIcon(newImg);
+                JLabel label=new JLabel(insBg);
+                instructionPanel.add(label);
+                instructionDialog.add(instructionPanel, BorderLayout.CENTER);
+                instructionDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                instructionDialog.pack();
+                instructionDialog.setLocationRelativeTo(null); // Center the dialog on the screen
+                instructionDialog.setVisible(true);
+            }
+        });
+        JButton save=createButton("save.PNG",275,350,pauseLabel);
+        save.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    if ((key!=0)||(scissors!=0)||(carpetDone!=0)) {
+                        FileWriter fw = new FileWriter("SaveGame.txt");
+                        PrintWriter pw = new PrintWriter(fw);
+                        pw.println(key);
+                        pw.println(scissors);
+                        pw.println(carpetDone);
+                        pw.close();
+                    }
+                    baseFrame.dispatchEvent(new WindowEvent(baseFrame, WindowEvent.WINDOW_CLOSING));
+                }
+                catch(IOException i){
+                    System.err.println("Error: "+i);
+                }
+            }
+        });
     }
     private void deskClicked(){
         if (deskPanel==null) {
@@ -86,13 +166,23 @@ public class Blue extends RoomItems   {
                 app.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        file = createButton("mail.PNG", 300, 200, computerLabel);
-                        file.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                JOptionPane.showMessageDialog(baseFrame,"Where the clothes of which you lack resides, the length of names in photo, shall unlock the box underneath");
-                            }
-                        });
+                        String passcode = JOptionPane.showInputDialog("Enter the 3-digit passcode:");
+                        while (passcode != null && !passcode.equals("394")) {
+                            passcode = JOptionPane.showInputDialog("Enter the 3-digit passcode:");
+                        }
+                        if (passcode == null) {
+                            computerPanel.setVisible(false);
+                            deskPanel.setVisible(true);
+                        }
+                        else {
+                            file = createButton("mail.PNG", 300, 200, computerLabel);
+                            file.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    JOptionPane.showMessageDialog(baseFrame, "Where the clothes of which you lack resides, the length of names in photo, shall unlock the box underneath");
+                                }
+                            });
+                        }
                     }
                 });
             }
@@ -117,7 +207,7 @@ public class Blue extends RoomItems   {
                 JPanel photoPanel=new JPanel();
                 JLabel photoLabel=showImage("photoCloser.png",deskPanel,photoPanel);
                 JButton okButton=new JButton("OK");
-                JDialog photoDialog=catText("why am i in this photo what","catHm.PNG",okButton);
+                JDialog photoDialog=catText("Why am I in this photo what.","catHm.PNG",okButton);
                 okButton.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e){
                         photoDialog.dispose();
@@ -144,35 +234,48 @@ public class Blue extends RoomItems   {
             public void actionPerformed(ActionEvent e){
                 JPanel safePanel=new JPanel();
                 JLabel safeLabel=showImage("safeCloser.PNG",closetPanel,safePanel);
-                JButton nextButton=new JButton("NEXT");
-                JDialog safeDialog=catText("wow ! i have a safe just like this at home ! i need a 6 digit code.","catHappy.PNG",nextButton);
-                nextButton.addActionListener(new ActionListener(){
-                    public void actionPerformed(ActionEvent e){
-                        String passcode=JOptionPane.showInputDialog("enter the passcode: ");
-                        while (passcode!=null && !passcode.equals("245473")) {
-                            passcode=JOptionPane.showInputDialog("enter the passcode: ");
+                if(key==0) {
+                    JButton nextButton = new JButton("NEXT");
+                    JDialog safeDialog = catText("Wow ! I have a safe just like this at home ! I need a 6 digit code.", "catHappy.PNG", nextButton);
+                    nextButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            String passcode = JOptionPane.showInputDialog("enter the passcode: ");
+                            while (passcode != null && !passcode.equals("245473")) {
+                                passcode = JOptionPane.showInputDialog("enter the passcode: ");
+                            }
+                            if (passcode == null) {
+                                safeDialog.dispose();
+                                safePanel.setVisible(false);
+                                closetPanel.setVisible(true);
+                            } else {
+                                safeLabel.setVisible(false);
+                                JLabel keyLabel = showImage("key.png", safePanel);
+                                JButton keyButton = new JButton("OK");
+                                safeDialog.dispose();
+                                JDialog keyDialog = catText("Yay! A key", "catHappier.PNG", keyButton);
+                                keyButton.addActionListener(new ActionListener() {
+                                    public void actionPerformed(ActionEvent e) {
+                                        keyDialog.dispose();
+                                        key = 1;
+                                        safePanel.setVisible(false);
+                                        closetPanel.setVisible(true);
+                                    }
+                                });
+                            }
                         }
-                        if (passcode==null) {
+                    });
+                }
+                else{
+                    JButton returnButton = new JButton("RETURN");
+                    JDialog safeDialog = catText("I've already got the key in this safe.","catNorm.PNG",returnButton);
+                    returnButton.addActionListener(new ActionListener(){
+                        public void actionPerformed(ActionEvent e){
                             safeDialog.dispose();
-                            safePanel.setVisible(false);
                             closetPanel.setVisible(true);
+                            safePanel.setVisible(false);
                         }
-                        else {
-                            safeLabel.setVisible(false);
-                            JLabel keyLabel = showImage("key.png",safePanel);
-                            JButton keyButton = new JButton("OK");
-                            safeDialog.dispose();
-                            JDialog keyDialog = catText("yay! a key", "catHappier.PNG", keyButton);
-                            keyButton.addActionListener(new ActionListener() {
-                                public void actionPerformed(ActionEvent e) {
-                                    keyDialog.dispose();
-                                    safePanel.setVisible(false);
-                                    closetPanel.setVisible(true);
-                                }
-                            });
-                        }
-                    }
-                });
+                    });
+                }
             }
         });
         box.addActionListener(new ActionListener(){
@@ -181,13 +284,13 @@ public class Blue extends RoomItems   {
                 JLabel boxLabel=showImage("boxCloser.png",closetPanel,boxPanel);
                 if (scissors==0) {
                     JButton boxButton = new JButton("NEXT");
-                    JDialog boxDialog = catText("looks like it needs a 4 digit code.", "catHm.PNG", boxButton);
+                    JDialog boxDialog = catText("Looks like it needs a 4 digit code.", "catHm.PNG", boxButton);
                     boxButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             boxDialog.dispose();
-                            String boxCode = JOptionPane.showInputDialog("enter the passcode: ");
+                            String boxCode = JOptionPane.showInputDialog("Enter the passcode: ");
                             while (boxCode != null && !boxCode.equals("3543")) {
-                                boxCode = JOptionPane.showInputDialog("enter the passcode: ");
+                                boxCode = JOptionPane.showInputDialog("Enter the passcode: ");
                             }
                             if (boxCode == null) {
                                 boxPanel.setVisible(false);
@@ -197,7 +300,7 @@ public class Blue extends RoomItems   {
                                 boxLabel.setVisible(false);
                                 JLabel scissorLabel = showImage("scissors.png", boxPanel);
                                 JButton scissorButton = new JButton("OK");
-                                JDialog scissorDialog = catText("who would keep scissors in a safe ??? i guess i'll take them..", "catNorm.PNG", scissorButton);
+                                JDialog scissorDialog = catText("Who would keep scissors in a safe ??? i guess i'll take them..", "catNorm.PNG", scissorButton);
                                 scissorButton.addActionListener(new ActionListener() {
                                     public void actionPerformed(ActionEvent e) {
                                         scissorDialog.dispose();
@@ -211,7 +314,7 @@ public class Blue extends RoomItems   {
                 }
                 else{
                     JButton gotButton=new JButton("OK");
-                    JDialog gotScissors=catText("i've already taken the scissors that were in here.","catNorm.PNG",gotButton);
+                    JDialog gotScissors=catText("I've already taken the scissors that were in here.","catNorm.PNG",gotButton);
                     gotButton.addActionListener(new ActionListener(){
                         public void actionPerformed(ActionEvent e){
                             gotScissors.dispose();
@@ -229,8 +332,8 @@ public class Blue extends RoomItems   {
         JPanel carpetPanel=new JPanel();
         JLabel carpetLabel=showImage("carpetCloser.png",roomPanel,carpetPanel);
         if (scissors==0){
-            JButton scisButton=new JButton("LEAVE");
-            JDialog noScisDialog=catText("i need something to open this box with...","catNorm.PNG",scisButton);
+            JButton scisButton=new JButton("RETURN");
+            JDialog noScisDialog=catText("I need something to open this box with...","catNorm.PNG",scisButton);
             scisButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
                     noScisDialog.dispose();
@@ -239,9 +342,9 @@ public class Blue extends RoomItems   {
                 }
             });
         }
-        else if (!carpetDone){
+        else if (carpetDone==0){
             JButton colourButton=new JButton("OPEN");
-            JDialog colourDialog=catText("i can open this with the scissors !","catHappy.PNG",colourButton);
+            JDialog colourDialog=catText("I can open this with the scissors !","catHappy.PNG",colourButton);
             colourButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     colourDialog.dispose();
@@ -254,6 +357,7 @@ public class Blue extends RoomItems   {
                     }
                     int[] colourCode = {0, 0, 0, 0, 0, 0};
                     int[] answerCode = {4, 1, 4, 3, 2, 3};
+                    leaveButton(colourPanel, roomPanel, colourLabel);
                     JButton red = createButton("red.PNG", 100, 30, colourLabel);
                     JButton yellow = createButton("yellow.PNG", 410, 25, colourLabel);
                     JButton green = createButton("green.PNG", 110, 312, colourLabel);
@@ -304,7 +408,7 @@ public class Blue extends RoomItems   {
                                     donePanel=new JPanel();
                                     JLabel doneLabel = showImage("clrDone.png",colourPanel,donePanel);
                                     leaveButton(donePanel, roomPanel, doneLabel);
-                                    carpetDone=true;
+                                    carpetDone=1;
                                 }
                                 for (int i = 0; i < 6; i++) {
                                     colourCode[i] = 0;
@@ -335,12 +439,18 @@ public class Blue extends RoomItems   {
                             System.out.println(Arrays.toString(colourCode));
                         }
                     });
-                    leaveButton(colourPanel, roomPanel, colourLabel);
                 }
             });
         }
         else{
+            if (donePanel==null){
+                donePanel=new JPanel();
+                JLabel doneLabel = showImage("clrDone.png",colourPanel,donePanel);
+                leaveButton(donePanel, roomPanel, doneLabel);
+            }
+            carpetPanel.setVisible(false);
             donePanel.setVisible(true);
+            leaveButton(donePanel, roomPanel, colourLabel);
         }
     }
     private void colourDone(int num,int colour, JButton button){
@@ -361,7 +471,7 @@ public class Blue extends RoomItems   {
                 if(num==5) {
                     colourLabel.setVisible(false);
                     flashLabel = showImage("clrSix.png", colourPanel);
-                    Timer timer2 = new Timer(500, new ActionListener() {
+                    Timer timer2 = new Timer(250, new ActionListener() {
 
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -396,7 +506,7 @@ public class Blue extends RoomItems   {
         doorLabel=showImage("doorCloser.png",roomPanel,doorPanel);
         if (key==0){
             JButton okButton=new JButton("OK");
-            JDialog keyDialog=catText("hm...... looks like i need a key to open this door.", "catHm.PNG", okButton );
+            JDialog keyDialog=catText("Hm...... looks like I need a key to open this door.", "catHm.PNG", okButton );
             okButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -408,12 +518,12 @@ public class Blue extends RoomItems   {
         }
         else{
             num=0;
-            int answer=JOptionPane.showConfirmDialog(doorPanel,"You have a key. Use it ?", "Door", YES_NO_OPTION );
-            if(answer==JOptionPane.YES_OPTION){
+            int ans=JOptionPane.showConfirmDialog(doorPanel,"You have a key. Use it ?", "Door", YES_NO_OPTION );
+            if(ans==JOptionPane.YES_OPTION){
                 doorLabel.setVisible(false);
                 doorLabel=showImage("free.png",doorPanel);
                 JButton nextButton=new JButton("NEXT");
-                JDialog freeDialog=catText("yay ! i'm finally free !!!!!!", "catHappier.PNG", nextButton);
+                JDialog freeDialog=catText("Yay ! I'm finally free !!!!!!", "catHappier.PNG", nextButton);
                 nextButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -421,7 +531,7 @@ public class Blue extends RoomItems   {
                         doorLabel.setVisible(false);
                         doorLabel=showImage("what.png",doorPanel);
                         JButton next2Button = new JButton("NEXT");
-                        JDialog waitDialog=catText("wait....... what ?", "catShock.PNG", next2Button);
+                        JDialog waitDialog=catText("Wait....... what ?", "catShock.PNG", next2Button);
                         next2Button.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -442,7 +552,7 @@ public class Blue extends RoomItems   {
                     }
                 });
             }
-            else if(answer==JOptionPane.NO_OPTION){
+            else if(ans==JOptionPane.NO_OPTION){
                 doorPanel.setVisible(false);
                 roomPanel.setVisible(true);
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
@@ -467,7 +577,7 @@ public class Blue extends RoomItems   {
         JLabel bedTableLabel=showImage("book.png",roomPanel,bedTablePanel);
         JButton ok=new JButton("OK");
         if (bTable==0) {
-            JDialog bedTableDialog = catText("this is a weird book, all the pages are ripped out except for this one.", "catUgh.png", ok);
+            JDialog bedTableDialog = catText("This is a weird book, all the pages are ripped out except for this one.", "catUgh.png", ok);
             ok.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     bedTableDialog.dispose();
@@ -478,7 +588,7 @@ public class Blue extends RoomItems   {
             });
         }
         else{
-            JDialog bedTableDialog = catText("hm...maybe these colours can help me escape.", "catHm.PNG", ok);
+            JDialog bedTableDialog = catText("Hm...maybe these colours can help me escape.", "catHm.PNG", ok);
             ok.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     bedTableDialog.dispose();

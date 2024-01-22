@@ -48,6 +48,7 @@ public class RoomItems {
         JButton button=new JButton(new ImageIcon(getClass().getResource(imageName)));
         button.setBounds(x,y, button.getIcon().getIconWidth(), button.getIcon().getIconHeight());
         button.setBorderPainted(false); //maybe get rid of
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
         button.setOpaque(false);
@@ -66,6 +67,7 @@ public class RoomItems {
         catPanel.add(imageLabel,BorderLayout.WEST);
         JLabel textLabel=new JLabel(message);
         catPanel.add(textLabel,BorderLayout.CENTER);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         int frameX = baseFrame.getLocation().x+100;
         int frameY = baseFrame.getLocation().y+350;
@@ -84,6 +86,7 @@ public class RoomItems {
         msgDialog.setLayout(new BorderLayout());
         JPanel msgPanel=new JPanel();
         msgPanel.add(new JLabel(message));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         int frameX = baseFrame.getLocation().x+150;
         int frameY = baseFrame.getLocation().y+450;
