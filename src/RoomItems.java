@@ -56,14 +56,16 @@ public class RoomItems {
     }
     protected JDialog catText(String message, String imageName,JButton button){
         JDialog catDialog = new JDialog(baseFrame, "You");
-        ImageIcon cat=new ImageIcon(getClass().getResource(imageName));
-        catDialog.setLayout(new BorderLayout());
-        catDialog.setPreferredSize(new Dimension(600, 200)); //size of dialog
+        Image pic = (new ImageIcon(getClass().getResource(imageName))).getImage();
+        Image newimg = pic.getScaledInstance(185, 140,Image.SCALE_FAST);
+        ImageIcon cat = new ImageIcon(newimg);
+        catDialog.setPreferredSize(new Dimension(610, 200)); //size of dialog
         JPanel catPanel=new JPanel();
+        catPanel.setLayout(new BorderLayout());
         JLabel imageLabel=new JLabel(cat);
-        catPanel.add(imageLabel);
+        catPanel.add(imageLabel,BorderLayout.WEST);
         JLabel textLabel=new JLabel(message);
-        catPanel.add(textLabel);
+        catPanel.add(textLabel,BorderLayout.CENTER);
 
         int frameX = baseFrame.getLocation().x+100;
         int frameY = baseFrame.getLocation().y+350;
@@ -96,7 +98,7 @@ public class RoomItems {
     }
 
     protected void leaveButton(JPanel oldPanel, JPanel newPanel, JLabel label){
-        JButton leave=createButton("leaveEx.png",500,500,label);
+        JButton leave=createButton("back.PNG",570,450,label);
         leave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

@@ -81,7 +81,6 @@ public class Start extends JPanel {
         JDialog awakeDialog = new JDialog(frame, "You");
         awakeDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         awakeDialog.setLayout(new BorderLayout());
-        awakeDialog.setPreferredSize(new Dimension(600, 200)); //size of dialog
 
         int frameX = frame.getLocation().x;
         int frameY = frame.getLocation().y;
@@ -89,11 +88,15 @@ public class Start extends JPanel {
         int dialogY = frameY+350;
 
         awakeDialog.setLocation(dialogX,dialogY);
-        ImageIcon cat = new ImageIcon(getClass().getResource("catTalkEx.png"));
+        //ImageIcon cat = new ImageIcon(getClass().getResource("catHm.PNG"));
+        Image pic = (new ImageIcon(getClass().getResource("catUgh.png"))).getImage();
+        Image newimg = pic.getScaledInstance(185, 140,Image.SCALE_FAST);
+        ImageIcon cat = new ImageIcon(newimg);
+        awakeDialog.setPreferredSize(new Dimension(610, 200));
         JLabel imageLabel = new JLabel(cat);
-        dialogPanel.add(imageLabel,BorderLayout.CENTER);
-        JLabel textLabel = new JLabel("ughhhghghgh where am i...???");
-        dialogPanel.add(textLabel,BorderLayout.SOUTH);
+        dialogPanel.add(imageLabel,BorderLayout.WEST);
+        JLabel textLabel = new JLabel("ughhhghghgh where am i...?");
+        dialogPanel.add(textLabel,BorderLayout.CENTER);
         awakeDialog.add(dialogPanel, BorderLayout.CENTER);
         JButton next = new JButton("NEXT");
         awakeDialog.add(next, BorderLayout.SOUTH);
