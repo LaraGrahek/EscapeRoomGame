@@ -66,7 +66,7 @@ public class Start extends JPanel {
                 }
             });
         }
-        else if(saved){
+        else {
             play.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     resumeGame();
@@ -117,7 +117,6 @@ public class Start extends JPanel {
         int dialogY = frameY + 350;
 
         awakeDialog.setLocation(dialogX, dialogY);
-        //ImageIcon cat = new ImageIcon(getClass().getResource("catHm.PNG"));
         Image pic = (new ImageIcon(getClass().getResource("catUgh.png"))).getImage();
         Image newimg = pic.getScaledInstance(185, 140, Image.SCALE_FAST);
         ImageIcon cat = new ImageIcon(newimg);
@@ -163,6 +162,7 @@ public class Start extends JPanel {
         JLabel roomLabel = new JLabel(room);
         roomLabel.setSize(800, 600);
         roomPanel.add(roomLabel);
+        frame.add(roomPanel);
         Blue blue = new Blue(frame, roomLabel, startPanel, roomPanel, true);
         Green green = new Green(frame, roomLabel, roomPanel);
     }

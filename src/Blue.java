@@ -43,9 +43,11 @@ public class Blue extends RoomItems   {
         baseFrame=frame;
         baseFrame.setVisible(true);
         roomPanel=panel;
+        roomPanel.setVisible(true);
         startPanel=start;
         roomLabel=label;
         roomLabel.setLayout(null);
+        roomLabel.setVisible(true);
         roomPanel.setLayout(null);
 
         JButton nextButton=new JButton("NEXT");
