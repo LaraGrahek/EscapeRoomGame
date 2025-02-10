@@ -13,6 +13,9 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import java.io.*;
 import static java.lang.System.*;
 
+/**
+ * Extends class RoomItems and represents room items that have more meaning to the game, unlike items that are just for show.
+ */
 public class Blue extends RoomItems   {
     JFrame baseFrame;
     JPanel startPanel;
@@ -540,7 +543,7 @@ public class Blue extends RoomItems   {
                                 waitDialog.dispose();
                                 doorLabel.setVisible(false);
                                 doorLabel=showImage("end.png",doorPanel);
-                                JButton leave=createButton("awakeEx.png",200,300,doorLabel);
+                                JButton leave=createButton("door.png",200,300,doorLabel);
                                 leave.addActionListener(new ActionListener() {
                                     @Override
                                     public void actionPerformed(ActionEvent e) {

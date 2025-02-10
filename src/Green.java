@@ -2,11 +2,16 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
+/**
+ * Extends class RoomItems and represents room items that are just for show.
+ */
 public class Green extends RoomItems{
     Green(JFrame frame, JLabel label, JPanel panel){
         super(frame,label,panel);
         roomLabel=label;
         roomPanel=panel;
+        //creating and adding actionlisteners to buttons
         JButton chair=createButton("chair.PNG",20,300,roomLabel);
         chair.addActionListener(e -> greenClicked("chairCloser.png","This is a chair.","Chair","this chair looks uncomfortable.","catHm.PNG"));
 
@@ -20,13 +25,16 @@ public class Green extends RoomItems{
         bed.addActionListener(e -> greenClicked("bedCloser.png","This is the bed that you woke up in.","Bed","ugh, i think i have back problems after sleeping on this mattress.","catUgh.png"));
     }
     private void greenClicked(String imagePic, String textMessage, String title, String imageMessage, String textPic){
+        //shows new background image
         JPanel newPanel=new JPanel();
         JLabel greenLabel=showImage(imagePic,roomPanel,newPanel);
+        //shows message
         JButton okButton=new JButton("OK");
         JDialog msg=msgText(textMessage,title,okButton);
         okButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 msg.dispose();
+                //shows cat dialog
                 JButton returnButton=new JButton("RETURN");
                 JDialog cat=catText(imageMessage,textPic,returnButton);
                 returnButton.addActionListener(new ActionListener(){

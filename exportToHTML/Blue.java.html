@@ -1,0 +1,625 @@
+<html>
+<head>
+<title>Blue.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #c678dd;}
+.s1 { color: #abb2bf;}
+.s2 { color: #d19a66;}
+.s3 { color: #5c6370;}
+.s4 { color: #98c379;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Blue.java</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">java.awt.*;</span>
+<span class="s0">import </span><span class="s1">java.awt.event.*;</span>
+<span class="s0">import </span><span class="s1">java.io.FileWriter;</span>
+<span class="s0">import </span><span class="s1">java.io.IOException;</span>
+<span class="s0">import </span><span class="s1">java.io.PrintWriter;</span>
+<span class="s0">import </span><span class="s1">java.util.Arrays;</span>
+<span class="s0">import </span><span class="s1">javax.swing.*;</span>
+<span class="s0">import </span><span class="s1">javax.swing.JButton;</span>
+<span class="s0">import </span><span class="s1">javax.swing.ImageIcon;</span>
+<span class="s0">import </span><span class="s1">javax.swing.JPanel;</span>
+<span class="s0">import static </span><span class="s1">javax.swing.JOptionPane.YES_NO_OPTION;</span>
+<span class="s0">import static </span><span class="s1">javax.swing.WindowConstants.DISPOSE_ON_CLOSE;</span>
+<span class="s0">import </span><span class="s1">java.io.*;</span>
+<span class="s0">import static </span><span class="s1">java.lang.System.*;</span>
+
+<span class="s0">public class </span><span class="s1">Blue </span><span class="s0">extends </span><span class="s1">RoomItems   {</span>
+    <span class="s1">JFrame baseFrame;</span>
+    <span class="s1">JPanel startPanel;</span>
+    <span class="s1">JPanel roomPanel;</span>
+    <span class="s0">private int </span><span class="s1">key=</span><span class="s2">0</span><span class="s1">;</span>
+    <span class="s0">private int </span><span class="s1">scissors=</span><span class="s2">0</span><span class="s1">;</span>
+    <span class="s0">private int </span><span class="s1">carpetDone=</span><span class="s2">0</span><span class="s1">;</span>
+    <span class="s0">private int </span><span class="s1">num=</span><span class="s2">0</span><span class="s1">;</span>
+    <span class="s0">private int </span><span class="s1">bTable=</span><span class="s2">0</span><span class="s1">;</span>
+    <span class="s0">private </span><span class="s1">JLabel doorLabel;</span>
+    <span class="s0">private </span><span class="s1">JLabel flashLabel;</span>
+    <span class="s0">private </span><span class="s1">JButton flashButton;</span>
+    <span class="s0">private </span><span class="s1">JLabel deskLabel;</span>
+    <span class="s0">private </span><span class="s1">JLabel closetLabel;</span>
+    <span class="s0">private </span><span class="s1">JLabel colourLabel;</span>
+    <span class="s0">private </span><span class="s1">JLabel computerLabel;</span>
+    <span class="s0">private </span><span class="s1">JPanel donePanel;</span>
+    <span class="s0">private </span><span class="s1">JPanel deskPanel; </span><span class="s3">//preserve big ones to not have to recreate them every time</span>
+    <span class="s0">private </span><span class="s1">JPanel closetPanel;</span>
+    <span class="s0">private </span><span class="s1">JPanel colourPanel;</span>
+    <span class="s0">private </span><span class="s1">JPanel pausePanel;</span>
+    <span class="s0">private </span><span class="s1">JButton file;</span>
+    <span class="s1">JLabel roomLabel;</span>
+
+
+    <span class="s1">Blue(JFrame frame, JLabel label, JPanel start, JPanel panel, </span><span class="s0">boolean </span><span class="s1">save){</span>
+        <span class="s0">super</span><span class="s1">(frame, label,panel);</span>
+        <span class="s1">baseFrame=frame;</span>
+        <span class="s1">baseFrame.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+        <span class="s1">roomPanel=panel;</span>
+        <span class="s1">roomPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+        <span class="s1">startPanel=start;</span>
+        <span class="s1">roomLabel=label;</span>
+        <span class="s1">roomLabel.setLayout(</span><span class="s0">null</span><span class="s1">);</span>
+        <span class="s1">roomLabel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+        <span class="s1">roomPanel.setLayout(</span><span class="s0">null</span><span class="s1">);</span>
+
+        <span class="s1">JButton nextButton=</span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;NEXT&quot;</span><span class="s1">);</span>
+        <span class="s1">JDialog timeText=catText(</span><span class="s4">&quot;...What time even is it?&quot;</span><span class="s1">,</span><span class="s4">&quot;catHm.PNG&quot;</span><span class="s1">,nextButton);</span>
+        <span class="s1">nextButton.addActionListener(e -&gt; timeText.dispose());</span>
+
+        <span class="s0">if </span><span class="s1">(save){</span>
+            <span class="s0">try </span><span class="s1">{</span>
+                <span class="s1">FileReader fr = </span><span class="s0">new </span><span class="s1">FileReader(</span><span class="s4">&quot;SaveGame.txt&quot;</span><span class="s1">);</span>
+                <span class="s1">BufferedReader br = </span><span class="s0">new </span><span class="s1">BufferedReader(fr);</span>
+                <span class="s1">key = Integer.parseInt(br.readLine());</span>
+                <span class="s1">scissors= Integer.parseInt(br.readLine());</span>
+                <span class="s1">carpetDone= Integer.parseInt(br.readLine());</span>
+                <span class="s1">br.close();</span>
+                <span class="s1">PrintWriter pw = </span><span class="s0">new </span><span class="s1">PrintWriter(</span><span class="s4">&quot;SaveGame.txt&quot;</span><span class="s1">); </span><span class="s3">//resets contents of the file</span>
+                <span class="s1">pw.close();</span>
+            <span class="s1">}</span>
+            <span class="s0">catch </span><span class="s1">(IOException i){</span>
+                <span class="s1">System.out.print(</span><span class="s4">&quot;error &quot;</span><span class="s1">+i);</span>
+            <span class="s1">}</span>
+
+        <span class="s1">}</span>
+
+        <span class="s1">JButton pause=createButton(</span><span class="s4">&quot;pause.PNG&quot;</span><span class="s1">,</span><span class="s2">734</span><span class="s1">,</span><span class="s2">20</span><span class="s1">,roomLabel);</span>
+        <span class="s1">pause.addActionListener(e -&gt; pauseClicked());</span>
+
+        <span class="s1">JButton door=createButton(</span><span class="s4">&quot;door.PNG&quot;</span><span class="s1">,</span><span class="s2">210</span><span class="s1">,</span><span class="s2">30</span><span class="s1">,roomLabel);</span>
+        <span class="s1">door.addActionListener(e -&gt; doorClicked());</span>
+
+        <span class="s1">JButton desk=createButton(</span><span class="s4">&quot;desk.PNG&quot;</span><span class="s1">,</span><span class="s2">10</span><span class="s1">,</span><span class="s2">430</span><span class="s1">,roomLabel);</span>
+        <span class="s1">desk.addActionListener(e -&gt; deskClicked());</span>
+
+        <span class="s1">JButton closet=createButton(</span><span class="s4">&quot;closet.PNG&quot;</span><span class="s1">,</span><span class="s2">5</span><span class="s1">,</span><span class="s2">20</span><span class="s1">,roomLabel);</span>
+        <span class="s1">closet.addActionListener(e -&gt; closetClicked());</span>
+
+        <span class="s1">JButton carpet=createButton(</span><span class="s4">&quot;carpet.PNG&quot;</span><span class="s1">,</span><span class="s2">450</span><span class="s1">,</span><span class="s2">410</span><span class="s1">,roomLabel);</span>
+        <span class="s1">carpet.addActionListener(e -&gt; carpetClicked());</span>
+
+        <span class="s1">JButton clock=createButton(</span><span class="s4">&quot;clock.PNG&quot;</span><span class="s1">,</span><span class="s2">400</span><span class="s1">,</span><span class="s2">35</span><span class="s1">,roomLabel);</span>
+        <span class="s1">clock.addActionListener(e -&gt; clockClicked());</span>
+
+        <span class="s1">JButton bedTable=createButton(</span><span class="s4">&quot;bedTable.PNG&quot;</span><span class="s1">,</span><span class="s2">430</span><span class="s1">,</span><span class="s2">140</span><span class="s1">,roomLabel);</span>
+        <span class="s1">bedTable.addActionListener(e -&gt; bedTableClicked());</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">pauseClicked(){</span>
+        <span class="s1">pausePanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+        <span class="s1">JLabel pauseLabel=showImage(</span><span class="s4">&quot;pauseBg.png&quot;</span><span class="s1">,roomPanel,pausePanel);</span>
+
+        <span class="s1">JButton resume=createButton(</span><span class="s4">&quot;resume.PNG&quot;</span><span class="s1">,</span><span class="s2">300</span><span class="s1">,</span><span class="s2">150</span><span class="s1">,pauseLabel);</span>
+        <span class="s1">resume.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener(){</span>
+            <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                <span class="s1">pausePanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                <span class="s1">roomPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+
+        <span class="s1">JButton howTo=createButton(</span><span class="s4">&quot;howToPause.PNG&quot;</span><span class="s1">,</span><span class="s2">265</span><span class="s1">,</span><span class="s2">250</span><span class="s1">,pauseLabel);</span>
+        <span class="s1">howTo.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener(){</span>
+            <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                <span class="s1">JPanel instructionPanel=</span><span class="s0">new </span><span class="s1">JPanel(</span><span class="s0">new </span><span class="s1">FlowLayout());</span>
+                <span class="s1">JDialog instructionDialog = </span><span class="s0">new </span><span class="s1">JDialog(baseFrame, </span><span class="s4">&quot;How To Play&quot;</span><span class="s1">, </span><span class="s0">false</span><span class="s1">);</span>
+                <span class="s1">instructionDialog.setPreferredSize(</span><span class="s0">new </span><span class="s1">Dimension(</span><span class="s2">450</span><span class="s1">, </span><span class="s2">260</span><span class="s1">)); </span><span class="s3">//size of dialog</span>
+                <span class="s1">instructionDialog.setLayout(</span><span class="s0">new </span><span class="s1">BorderLayout());</span>
+                <span class="s1">ImageIcon insBg = </span><span class="s0">new </span><span class="s1">ImageIcon(getClass().getResource(</span><span class="s4">&quot;instructions.png&quot;</span><span class="s1">));</span>
+                <span class="s1">Image insImg = (insBg).getImage();</span>
+                <span class="s1">Image newImg = insImg.getScaledInstance(</span><span class="s2">450</span><span class="s1">, </span><span class="s2">240</span><span class="s1">,Image.SCALE_DEFAULT);</span>
+                <span class="s1">insBg = </span><span class="s0">new </span><span class="s1">ImageIcon(newImg);</span>
+                <span class="s1">JLabel label=</span><span class="s0">new </span><span class="s1">JLabel(insBg);</span>
+                <span class="s1">instructionPanel.add(label);</span>
+                <span class="s1">instructionDialog.add(instructionPanel, BorderLayout.CENTER);</span>
+                <span class="s1">instructionDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);</span>
+                <span class="s1">instructionDialog.pack();</span>
+                <span class="s1">instructionDialog.setLocationRelativeTo(</span><span class="s0">null</span><span class="s1">); </span><span class="s3">// Center the dialog on the screen</span>
+                <span class="s1">instructionDialog.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s1">JButton save=createButton(</span><span class="s4">&quot;save.PNG&quot;</span><span class="s1">,</span><span class="s2">275</span><span class="s1">,</span><span class="s2">350</span><span class="s1">,pauseLabel);</span>
+        <span class="s1">save.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener(){</span>
+            <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                <span class="s0">try</span><span class="s1">{</span>
+                    <span class="s0">if </span><span class="s1">((key!=</span><span class="s2">0</span><span class="s1">)||(scissors!=</span><span class="s2">0</span><span class="s1">)||(carpetDone!=</span><span class="s2">0</span><span class="s1">)) {</span>
+                        <span class="s1">FileWriter fw = </span><span class="s0">new </span><span class="s1">FileWriter(</span><span class="s4">&quot;SaveGame.txt&quot;</span><span class="s1">);</span>
+                        <span class="s1">PrintWriter pw = </span><span class="s0">new </span><span class="s1">PrintWriter(fw);</span>
+                        <span class="s1">pw.println(key);</span>
+                        <span class="s1">pw.println(scissors);</span>
+                        <span class="s1">pw.println(carpetDone);</span>
+                        <span class="s1">pw.close();</span>
+                    <span class="s1">}</span>
+                    <span class="s1">baseFrame.dispatchEvent(</span><span class="s0">new </span><span class="s1">WindowEvent(baseFrame, WindowEvent.WINDOW_CLOSING));</span>
+                <span class="s1">}</span>
+                <span class="s0">catch</span><span class="s1">(IOException i){</span>
+                    <span class="s1">System.err.println(</span><span class="s4">&quot;Error: &quot;</span><span class="s1">+i);</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+    <span class="s1">}</span>
+    <span class="s0">private void </span><span class="s1">deskClicked(){</span>
+        <span class="s0">if </span><span class="s1">(deskPanel==</span><span class="s0">null</span><span class="s1">) {</span>
+            <span class="s1">deskPanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+            <span class="s1">deskLabel = showImage(</span><span class="s4">&quot;deskCloser.png&quot;</span><span class="s1">,roomPanel, deskPanel);</span>
+        <span class="s1">}</span>
+        <span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">roomPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+            <span class="s1">deskPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+        <span class="s1">}</span>
+        <span class="s1">leaveButton(deskPanel,roomPanel,deskLabel);</span>
+        <span class="s1">JButton computer=createButton(</span><span class="s4">&quot;computer.PNG&quot;</span><span class="s1">,</span><span class="s2">330</span><span class="s1">,</span><span class="s2">0</span><span class="s1">,deskLabel);</span>
+        <span class="s1">JButton water=createButton(</span><span class="s4">&quot;water.PNG&quot;</span><span class="s1">,</span><span class="s2">50</span><span class="s1">,</span><span class="s2">350</span><span class="s1">,deskLabel);</span>
+        <span class="s1">JButton picture=createButton(</span><span class="s4">&quot;photo.PNG&quot;</span><span class="s1">,</span><span class="s2">20</span><span class="s1">,</span><span class="s2">0</span><span class="s1">,deskLabel);</span>
+        <span class="s1">computer.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                <span class="s1">JPanel computerPanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+                <span class="s1">computerLabel=showImage(</span><span class="s4">&quot;compBg.png&quot;</span><span class="s1">,deskPanel,computerPanel);</span>
+                <span class="s1">JButton app=createButton(</span><span class="s4">&quot;app.PNG&quot;</span><span class="s1">,</span><span class="s2">500</span><span class="s1">,</span><span class="s2">100</span><span class="s1">,computerLabel);</span>
+                <span class="s1">leaveButton(computerPanel,deskPanel,computerLabel);</span>
+                <span class="s1">app.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                    <span class="s1">@Override</span>
+                    <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                        <span class="s1">String passcode = JOptionPane.showInputDialog(</span><span class="s4">&quot;Enter the 3-digit passcode:&quot;</span><span class="s1">);</span>
+                        <span class="s0">while </span><span class="s1">(passcode != </span><span class="s0">null </span><span class="s1">&amp;&amp; !passcode.equals(</span><span class="s4">&quot;394&quot;</span><span class="s1">)) {</span>
+                            <span class="s1">passcode = JOptionPane.showInputDialog(</span><span class="s4">&quot;Enter the 3-digit passcode:&quot;</span><span class="s1">);</span>
+                        <span class="s1">}</span>
+                        <span class="s0">if </span><span class="s1">(passcode == </span><span class="s0">null</span><span class="s1">) {</span>
+                            <span class="s1">computerPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                            <span class="s1">deskPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                        <span class="s1">}</span>
+                        <span class="s0">else </span><span class="s1">{</span>
+                            <span class="s1">file = createButton(</span><span class="s4">&quot;mail.PNG&quot;</span><span class="s1">, </span><span class="s2">300</span><span class="s1">, </span><span class="s2">200</span><span class="s1">, computerLabel);</span>
+                            <span class="s1">file.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                                <span class="s1">@Override</span>
+                                <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                                    <span class="s1">JOptionPane.showMessageDialog(baseFrame, </span><span class="s4">&quot;Where the clothes of which you lack resides, the length of names in photo, shall unlock the box underneath&quot;</span><span class="s1">);</span>
+                                <span class="s1">}</span>
+                            <span class="s1">});</span>
+                        <span class="s1">}</span>
+                    <span class="s1">}</span>
+                <span class="s1">});</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s1">water.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener(){</span>
+            <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e){</span>
+                <span class="s1">JPanel waterPanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+                <span class="s1">JLabel waterLabel=showImage(</span><span class="s4">&quot;waterCloser.png&quot;</span><span class="s1">,deskPanel,waterPanel);</span>
+                <span class="s1">JButton okButton=</span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;OK&quot;</span><span class="s1">);</span>
+                <span class="s1">JDialog waterDialog=msgText(</span><span class="s4">&quot;This is a glass of water.&quot;</span><span class="s1">,</span><span class="s4">&quot;Water Glass&quot;</span><span class="s1">,okButton);</span>
+                <span class="s1">okButton.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener(){</span>
+                    <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                        <span class="s1">waterDialog.dispose();</span>
+                        <span class="s1">waterPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                        <span class="s1">deskPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                    <span class="s1">}</span>
+                <span class="s1">});</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s1">picture.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener(){</span>
+            <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e){</span>
+                <span class="s1">JPanel photoPanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+                <span class="s1">JLabel photoLabel=showImage(</span><span class="s4">&quot;photoCloser.png&quot;</span><span class="s1">,deskPanel,photoPanel);</span>
+                <span class="s1">JButton okButton=</span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;OK&quot;</span><span class="s1">);</span>
+                <span class="s1">JDialog photoDialog=catText(</span><span class="s4">&quot;Why am I in this photo what.&quot;</span><span class="s1">,</span><span class="s4">&quot;catHm.PNG&quot;</span><span class="s1">,okButton);</span>
+                <span class="s1">okButton.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener(){</span>
+                    <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e){</span>
+                        <span class="s1">photoDialog.dispose();</span>
+                        <span class="s1">photoPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                        <span class="s1">deskPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                    <span class="s1">}</span>
+                <span class="s1">});</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+    <span class="s1">}</span>
+    <span class="s0">private void </span><span class="s1">closetClicked(){</span>
+        <span class="s0">if </span><span class="s1">(closetPanel==</span><span class="s0">null </span><span class="s1">|| closetLabel==</span><span class="s0">null</span><span class="s1">){</span>
+            <span class="s1">closetPanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+            <span class="s1">closetLabel = showImage(</span><span class="s4">&quot;closetCloser.png&quot;</span><span class="s1">,roomPanel, closetPanel);</span>
+        <span class="s1">}</span>
+        <span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">closetPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+            <span class="s1">roomPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+        <span class="s1">}</span>
+        <span class="s1">JButton safe=createButton(</span><span class="s4">&quot;safe.PNG&quot;</span><span class="s1">,</span><span class="s2">440</span><span class="s1">,</span><span class="s2">55</span><span class="s1">,closetLabel);</span>
+        <span class="s1">JButton box=createButton(</span><span class="s4">&quot;box.PNG&quot;</span><span class="s1">,</span><span class="s2">145</span><span class="s1">,</span><span class="s2">420</span><span class="s1">,closetLabel);</span>
+        <span class="s1">leaveButton(closetPanel,roomPanel,closetLabel);</span>
+        <span class="s1">safe.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener(){</span>
+            <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e){</span>
+                <span class="s1">JPanel safePanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+                <span class="s1">JLabel safeLabel=showImage(</span><span class="s4">&quot;safeCloser.PNG&quot;</span><span class="s1">,closetPanel,safePanel);</span>
+                <span class="s0">if</span><span class="s1">(key==</span><span class="s2">0</span><span class="s1">) {</span>
+                    <span class="s1">JButton nextButton = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;NEXT&quot;</span><span class="s1">);</span>
+                    <span class="s1">JDialog safeDialog = catText(</span><span class="s4">&quot;Wow ! I have a safe just like this at home ! I need a 6 digit code.&quot;</span><span class="s1">, </span><span class="s4">&quot;catHappy.PNG&quot;</span><span class="s1">, nextButton);</span>
+                    <span class="s1">nextButton.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                        <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                            <span class="s1">String passcode = JOptionPane.showInputDialog(</span><span class="s4">&quot;enter the passcode: &quot;</span><span class="s1">);</span>
+                            <span class="s0">while </span><span class="s1">(passcode != </span><span class="s0">null </span><span class="s1">&amp;&amp; !passcode.equals(</span><span class="s4">&quot;245473&quot;</span><span class="s1">)) {</span>
+                                <span class="s1">passcode = JOptionPane.showInputDialog(</span><span class="s4">&quot;enter the passcode: &quot;</span><span class="s1">);</span>
+                            <span class="s1">}</span>
+                            <span class="s0">if </span><span class="s1">(passcode == </span><span class="s0">null</span><span class="s1">) {</span>
+                                <span class="s1">safeDialog.dispose();</span>
+                                <span class="s1">safePanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                                <span class="s1">closetPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                                <span class="s1">safeLabel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                                <span class="s1">JLabel keyLabel = showImage(</span><span class="s4">&quot;key.png&quot;</span><span class="s1">, safePanel);</span>
+                                <span class="s1">JButton keyButton = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;OK&quot;</span><span class="s1">);</span>
+                                <span class="s1">safeDialog.dispose();</span>
+                                <span class="s1">JDialog keyDialog = catText(</span><span class="s4">&quot;Yay! A key&quot;</span><span class="s1">, </span><span class="s4">&quot;catHappier.PNG&quot;</span><span class="s1">, keyButton);</span>
+                                <span class="s1">keyButton.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                                    <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                                        <span class="s1">keyDialog.dispose();</span>
+                                        <span class="s1">key = </span><span class="s2">1</span><span class="s1">;</span>
+                                        <span class="s1">safePanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                                        <span class="s1">closetPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                                    <span class="s1">}</span>
+                                <span class="s1">});</span>
+                            <span class="s1">}</span>
+                        <span class="s1">}</span>
+                    <span class="s1">});</span>
+                <span class="s1">}</span>
+                <span class="s0">else</span><span class="s1">{</span>
+                    <span class="s1">JButton returnButton = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;RETURN&quot;</span><span class="s1">);</span>
+                    <span class="s1">JDialog safeDialog = catText(</span><span class="s4">&quot;I've already got the key in this safe.&quot;</span><span class="s1">,</span><span class="s4">&quot;catNorm.PNG&quot;</span><span class="s1">,returnButton);</span>
+                    <span class="s1">returnButton.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener(){</span>
+                        <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e){</span>
+                            <span class="s1">safeDialog.dispose();</span>
+                            <span class="s1">closetPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                            <span class="s1">safePanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                        <span class="s1">}</span>
+                    <span class="s1">});</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s1">box.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener(){</span>
+            <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e){</span>
+                <span class="s1">JPanel boxPanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+                <span class="s1">JLabel boxLabel=showImage(</span><span class="s4">&quot;boxCloser.png&quot;</span><span class="s1">,closetPanel,boxPanel);</span>
+                <span class="s0">if </span><span class="s1">(scissors==</span><span class="s2">0</span><span class="s1">) {</span>
+                    <span class="s1">JButton boxButton = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;NEXT&quot;</span><span class="s1">);</span>
+                    <span class="s1">JDialog boxDialog = catText(</span><span class="s4">&quot;Looks like it needs a 4 digit code.&quot;</span><span class="s1">, </span><span class="s4">&quot;catHm.PNG&quot;</span><span class="s1">, boxButton);</span>
+                    <span class="s1">boxButton.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                        <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                            <span class="s1">boxDialog.dispose();</span>
+                            <span class="s1">String boxCode = JOptionPane.showInputDialog(</span><span class="s4">&quot;Enter the passcode: &quot;</span><span class="s1">);</span>
+                            <span class="s0">while </span><span class="s1">(boxCode != </span><span class="s0">null </span><span class="s1">&amp;&amp; !boxCode.equals(</span><span class="s4">&quot;3543&quot;</span><span class="s1">)) {</span>
+                                <span class="s1">boxCode = JOptionPane.showInputDialog(</span><span class="s4">&quot;Enter the passcode: &quot;</span><span class="s1">);</span>
+                            <span class="s1">}</span>
+                            <span class="s0">if </span><span class="s1">(boxCode == </span><span class="s0">null</span><span class="s1">) {</span>
+                                <span class="s1">boxPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                                <span class="s1">closetPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                                <span class="s1">scissors = </span><span class="s2">1</span><span class="s1">;</span>
+                                <span class="s1">boxLabel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                                <span class="s1">JLabel scissorLabel = showImage(</span><span class="s4">&quot;scissors.png&quot;</span><span class="s1">, boxPanel);</span>
+                                <span class="s1">JButton scissorButton = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;OK&quot;</span><span class="s1">);</span>
+                                <span class="s1">JDialog scissorDialog = catText(</span><span class="s4">&quot;Who would keep scissors in a safe ??? i guess i'll take them..&quot;</span><span class="s1">, </span><span class="s4">&quot;catNorm.PNG&quot;</span><span class="s1">, scissorButton);</span>
+                                <span class="s1">scissorButton.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                                    <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                                        <span class="s1">scissorDialog.dispose();</span>
+                                        <span class="s1">boxPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                                        <span class="s1">closetPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                                    <span class="s1">}</span>
+                                <span class="s1">});</span>
+                            <span class="s1">}</span>
+                        <span class="s1">}</span>
+                    <span class="s1">});</span>
+                <span class="s1">}</span>
+                <span class="s0">else</span><span class="s1">{</span>
+                    <span class="s1">JButton gotButton=</span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;OK&quot;</span><span class="s1">);</span>
+                    <span class="s1">JDialog gotScissors=catText(</span><span class="s4">&quot;I've already taken the scissors that were in here.&quot;</span><span class="s1">,</span><span class="s4">&quot;catNorm.PNG&quot;</span><span class="s1">,gotButton);</span>
+                    <span class="s1">gotButton.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener(){</span>
+                        <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e){</span>
+                            <span class="s1">gotScissors.dispose();</span>
+                            <span class="s1">boxPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                            <span class="s1">closetPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                        <span class="s1">}</span>
+                    <span class="s1">});</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">carpetClicked(){</span>
+        <span class="s1">num=</span><span class="s2">0</span><span class="s1">;</span>
+        <span class="s1">JPanel carpetPanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+        <span class="s1">JLabel carpetLabel=showImage(</span><span class="s4">&quot;carpetCloser.png&quot;</span><span class="s1">,roomPanel,carpetPanel);</span>
+        <span class="s0">if </span><span class="s1">(scissors==</span><span class="s2">0</span><span class="s1">){</span>
+            <span class="s1">JButton scisButton=</span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;RETURN&quot;</span><span class="s1">);</span>
+            <span class="s1">JDialog noScisDialog=catText(</span><span class="s4">&quot;I need something to open this box with...&quot;</span><span class="s1">,</span><span class="s4">&quot;catNorm.PNG&quot;</span><span class="s1">,scisButton);</span>
+            <span class="s1">scisButton.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener(){</span>
+                <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e){</span>
+                    <span class="s1">noScisDialog.dispose();</span>
+                    <span class="s1">carpetPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                    <span class="s1">roomPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                <span class="s1">}</span>
+            <span class="s1">});</span>
+        <span class="s1">}</span>
+        <span class="s0">else if </span><span class="s1">(carpetDone==</span><span class="s2">0</span><span class="s1">){</span>
+            <span class="s1">JButton colourButton=</span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;OPEN&quot;</span><span class="s1">);</span>
+            <span class="s1">JDialog colourDialog=catText(</span><span class="s4">&quot;I can open this with the scissors !&quot;</span><span class="s1">,</span><span class="s4">&quot;catHappy.PNG&quot;</span><span class="s1">,colourButton);</span>
+            <span class="s1">colourButton.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                    <span class="s1">colourDialog.dispose();</span>
+                    <span class="s0">if </span><span class="s1">(colourPanel == </span><span class="s0">null</span><span class="s1">) {</span>
+                        <span class="s1">colourPanel = </span><span class="s0">new </span><span class="s1">JPanel();</span>
+                        <span class="s1">colourLabel = showImage(</span><span class="s4">&quot;colour.png&quot;</span><span class="s1">, carpetPanel, colourPanel);</span>
+                    <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                        <span class="s1">colourPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                        <span class="s1">carpetPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                    <span class="s1">}</span>
+                    <span class="s0">int</span><span class="s1">[] colourCode = {</span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">};</span>
+                    <span class="s0">int</span><span class="s1">[] answerCode = {</span><span class="s2">4</span><span class="s1">, </span><span class="s2">1</span><span class="s1">, </span><span class="s2">4</span><span class="s1">, </span><span class="s2">3</span><span class="s1">, </span><span class="s2">2</span><span class="s1">, </span><span class="s2">3</span><span class="s1">};</span>
+                    <span class="s1">leaveButton(colourPanel, roomPanel, colourLabel);</span>
+                    <span class="s1">JButton red = createButton(</span><span class="s4">&quot;red.PNG&quot;</span><span class="s1">, </span><span class="s2">100</span><span class="s1">, </span><span class="s2">30</span><span class="s1">, colourLabel);</span>
+                    <span class="s1">JButton yellow = createButton(</span><span class="s4">&quot;yellow.PNG&quot;</span><span class="s1">, </span><span class="s2">410</span><span class="s1">, </span><span class="s2">25</span><span class="s1">, colourLabel);</span>
+                    <span class="s1">JButton green = createButton(</span><span class="s4">&quot;green.PNG&quot;</span><span class="s1">, </span><span class="s2">110</span><span class="s1">, </span><span class="s2">312</span><span class="s1">, colourLabel);</span>
+                    <span class="s1">JButton blue = createButton(</span><span class="s4">&quot;blue.PNG&quot;</span><span class="s1">, </span><span class="s2">420</span><span class="s1">, </span><span class="s2">300</span><span class="s1">, colourLabel);</span>
+                    <span class="s1">JOptionPane.showMessageDialog(colourPanel, </span><span class="s4">&quot;Click the buttons in the correct order.&quot;</span><span class="s1">);</span>
+                    <span class="s1">red.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                        <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                            <span class="s1">colourDone(num,</span><span class="s2">1</span><span class="s1">,red);</span>
+                            <span class="s0">if </span><span class="s1">(num &gt; </span><span class="s2">5</span><span class="s1">) {</span>
+                                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s2">0</span><span class="s1">; i &lt; </span><span class="s2">6</span><span class="s1">; i++) {</span>
+                                    <span class="s1">colourCode[i] = </span><span class="s2">0</span><span class="s1">;</span>
+                                <span class="s1">}</span>
+                                <span class="s1">num=</span><span class="s2">1</span><span class="s1">;</span>
+                                <span class="s1">colourCode[</span><span class="s2">0</span><span class="s1">] = </span><span class="s2">1</span><span class="s1">;</span>
+                            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                                <span class="s1">colourCode[num] = </span><span class="s2">1</span><span class="s1">;</span>
+                                <span class="s1">num++;</span>
+                            <span class="s1">}</span>
+                            <span class="s1">System.out.println(Arrays.toString(colourCode));</span>
+
+                        <span class="s1">}</span>
+                    <span class="s1">});</span>
+                    <span class="s1">yellow.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                        <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                            <span class="s1">colourDone(num,</span><span class="s2">2</span><span class="s1">,yellow);</span>
+                            <span class="s0">if </span><span class="s1">(num &gt; </span><span class="s2">5</span><span class="s1">) {</span>
+                                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s2">0</span><span class="s1">; i &lt; </span><span class="s2">6</span><span class="s1">; i++) {</span>
+                                    <span class="s1">colourCode[i] = </span><span class="s2">0</span><span class="s1">;</span>
+                                <span class="s1">}</span>
+                                <span class="s1">num=</span><span class="s2">1</span><span class="s1">;</span>
+                                <span class="s1">colourCode[</span><span class="s2">0</span><span class="s1">] = </span><span class="s2">2</span><span class="s1">;</span>
+                            <span class="s1">}</span>
+                            <span class="s0">else </span><span class="s1">{</span>
+                                <span class="s1">colourCode[num] = </span><span class="s2">2</span><span class="s1">;</span>
+                                <span class="s1">num++;</span>
+                            <span class="s1">}</span>
+                            <span class="s1">System.out.println(Arrays.toString(colourCode));</span>
+                        <span class="s1">}</span>
+                    <span class="s1">});</span>
+                    <span class="s1">green.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() { </span><span class="s3">//CHECK TO SEE TO FIX NUM=0</span>
+                        <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                            <span class="s1">colourDone(num,</span><span class="s2">3</span><span class="s1">,green);</span>
+                            <span class="s0">if </span><span class="s1">(num &gt;= </span><span class="s2">5</span><span class="s1">) {</span>
+                                <span class="s0">if </span><span class="s1">(num==</span><span class="s2">5</span><span class="s1">) {</span>
+                                    <span class="s1">colourCode[</span><span class="s2">5</span><span class="s1">] = </span><span class="s2">3</span><span class="s1">;</span>
+                                <span class="s1">}</span>
+                                <span class="s0">if </span><span class="s1">(Arrays.equals(colourCode, answerCode)) {</span>
+                                    <span class="s1">donePanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+                                    <span class="s1">JLabel doneLabel = showImage(</span><span class="s4">&quot;clrDone.png&quot;</span><span class="s1">,colourPanel,donePanel);</span>
+                                    <span class="s1">leaveButton(donePanel, roomPanel, doneLabel);</span>
+                                    <span class="s1">carpetDone=</span><span class="s2">1</span><span class="s1">;</span>
+                                <span class="s1">}</span>
+                                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s2">0</span><span class="s1">; i &lt; </span><span class="s2">6</span><span class="s1">; i++) {</span>
+                                    <span class="s1">colourCode[i] = </span><span class="s2">0</span><span class="s1">;</span>
+                                <span class="s1">}</span>
+                                <span class="s1">num=</span><span class="s2">0</span><span class="s1">;</span>
+                            <span class="s1">}</span>
+                            <span class="s0">else </span><span class="s1">{</span>
+                                <span class="s1">colourCode[num] = </span><span class="s2">3</span><span class="s1">;</span>
+                                <span class="s1">num++;</span>
+                            <span class="s1">}</span>
+                            <span class="s1">System.out.println(Arrays.toString(colourCode));</span>
+                        <span class="s1">}</span>
+                    <span class="s1">});</span>
+                    <span class="s1">blue.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                        <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                            <span class="s1">colourDone(num,</span><span class="s2">4</span><span class="s1">,blue);</span>
+                            <span class="s0">if </span><span class="s1">(num &gt; </span><span class="s2">5</span><span class="s1">) {</span>
+                                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s2">0</span><span class="s1">; i &lt; </span><span class="s2">6</span><span class="s1">; i++) {</span>
+                                    <span class="s1">colourCode[i] = </span><span class="s2">0</span><span class="s1">;</span>
+                                <span class="s1">}</span>
+                                <span class="s1">colourCode[</span><span class="s2">0</span><span class="s1">]=</span><span class="s2">4</span><span class="s1">;</span>
+                                <span class="s1">num=</span><span class="s2">1</span><span class="s1">;</span>
+                            <span class="s1">}</span>
+                            <span class="s0">else </span><span class="s1">{</span>
+                                <span class="s1">colourCode[num] = </span><span class="s2">4</span><span class="s1">;</span>
+                                <span class="s1">num++;</span>
+                            <span class="s1">}</span>
+                            <span class="s1">System.out.println(Arrays.toString(colourCode));</span>
+                        <span class="s1">}</span>
+                    <span class="s1">});</span>
+                <span class="s1">}</span>
+            <span class="s1">});</span>
+        <span class="s1">}</span>
+        <span class="s0">else</span><span class="s1">{</span>
+            <span class="s0">if </span><span class="s1">(donePanel==</span><span class="s0">null</span><span class="s1">){</span>
+                <span class="s1">donePanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+                <span class="s1">JLabel doneLabel = showImage(</span><span class="s4">&quot;clrDone.png&quot;</span><span class="s1">,colourPanel,donePanel);</span>
+                <span class="s1">leaveButton(donePanel, roomPanel, doneLabel);</span>
+            <span class="s1">}</span>
+            <span class="s1">carpetPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+            <span class="s1">donePanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+            <span class="s1">leaveButton(donePanel, roomPanel, colourLabel);</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+    <span class="s0">private void </span><span class="s1">colourDone(</span><span class="s0">int </span><span class="s1">num,</span><span class="s0">int </span><span class="s1">colour, JButton button){</span>
+        <span class="s0">switch</span><span class="s1">(colour){</span>
+            <span class="s0">case </span><span class="s2">1</span><span class="s1">: button.setIcon(</span><span class="s0">new </span><span class="s1">ImageIcon(getClass().getResource(</span><span class="s4">&quot;redClick.png&quot;</span><span class="s1">)));</span>
+                    <span class="s0">break</span><span class="s1">;</span>
+            <span class="s0">case </span><span class="s2">2</span><span class="s1">: button.setIcon(</span><span class="s0">new </span><span class="s1">ImageIcon(getClass().getResource(</span><span class="s4">&quot;yellowClick.png&quot;</span><span class="s1">)));</span>
+                    <span class="s0">break</span><span class="s1">;</span>
+            <span class="s0">case </span><span class="s2">3</span><span class="s1">: button.setIcon(</span><span class="s0">new </span><span class="s1">ImageIcon(getClass().getResource(</span><span class="s4">&quot;greenClick.png&quot;</span><span class="s1">)));</span>
+                    <span class="s0">break</span><span class="s1">;</span>
+            <span class="s0">case </span><span class="s2">4</span><span class="s1">: button.setIcon(</span><span class="s0">new </span><span class="s1">ImageIcon(getClass().getResource(</span><span class="s4">&quot;blueClick.png&quot;</span><span class="s1">)));</span>
+                    <span class="s0">break</span><span class="s1">;</span>
+        <span class="s1">}</span>
+        <span class="s1">Timer timer1 = </span><span class="s0">new </span><span class="s1">Timer(</span><span class="s2">250</span><span class="s1">, </span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                <span class="s0">if</span><span class="s1">(num==</span><span class="s2">5</span><span class="s1">) {</span>
+                    <span class="s1">colourLabel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                    <span class="s1">flashLabel = showImage(</span><span class="s4">&quot;clrSix.png&quot;</span><span class="s1">, colourPanel);</span>
+                    <span class="s1">Timer timer2 = </span><span class="s0">new </span><span class="s1">Timer(</span><span class="s2">250</span><span class="s1">, </span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+
+                        <span class="s1">@Override</span>
+                        <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                            <span class="s1">colourLabel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                            <span class="s1">flashLabel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                            <span class="s1">flashLabel = </span><span class="s0">null</span><span class="s1">;</span>
+                        <span class="s1">}</span>
+
+                    <span class="s1">});</span>
+                    <span class="s1">timer2.start();</span>
+                    <span class="s1">timer2.setRepeats(</span><span class="s0">false</span><span class="s1">);</span>
+                <span class="s1">}</span>
+                <span class="s0">switch</span><span class="s1">(colour){</span>
+                    <span class="s0">case </span><span class="s2">1</span><span class="s1">: button.setIcon(</span><span class="s0">new </span><span class="s1">ImageIcon(getClass().getResource(</span><span class="s4">&quot;red.png&quot;</span><span class="s1">)));</span>
+                            <span class="s0">break</span><span class="s1">;</span>
+                    <span class="s0">case </span><span class="s2">2</span><span class="s1">: button.setIcon(</span><span class="s0">new </span><span class="s1">ImageIcon(getClass().getResource(</span><span class="s4">&quot;yellow.png&quot;</span><span class="s1">)));</span>
+                            <span class="s0">break</span><span class="s1">;</span>
+                    <span class="s0">case </span><span class="s2">3</span><span class="s1">: button.setIcon(</span><span class="s0">new </span><span class="s1">ImageIcon(getClass().getResource(</span><span class="s4">&quot;green.png&quot;</span><span class="s1">)));</span>
+                            <span class="s0">break</span><span class="s1">;</span>
+                    <span class="s0">case </span><span class="s2">4</span><span class="s1">: button.setIcon(</span><span class="s0">new </span><span class="s1">ImageIcon(getClass().getResource(</span><span class="s4">&quot;blue.png&quot;</span><span class="s1">)));</span>
+                            <span class="s0">break</span><span class="s1">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+
+        <span class="s1">});</span>
+        <span class="s1">timer1.start();</span>
+        <span class="s1">timer1.setRepeats(</span><span class="s0">false</span><span class="s1">);</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">doorClicked(){</span>
+        <span class="s1">JPanel doorPanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+        <span class="s1">doorLabel=showImage(</span><span class="s4">&quot;doorCloser.png&quot;</span><span class="s1">,roomPanel,doorPanel);</span>
+        <span class="s0">if </span><span class="s1">(key==</span><span class="s2">0</span><span class="s1">){</span>
+            <span class="s1">JButton okButton=</span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;OK&quot;</span><span class="s1">);</span>
+            <span class="s1">JDialog keyDialog=catText(</span><span class="s4">&quot;Hm...... looks like I need a key to open this door.&quot;</span><span class="s1">, </span><span class="s4">&quot;catHm.PNG&quot;</span><span class="s1">, okButton );</span>
+            <span class="s1">okButton.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                <span class="s1">@Override</span>
+                <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                    <span class="s1">doorPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                    <span class="s1">roomPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                    <span class="s1">keyDialog.dispose(); </span><span class="s3">// Close the dialog</span>
+                <span class="s1">}</span>
+            <span class="s1">});</span>
+        <span class="s1">}</span>
+        <span class="s0">else</span><span class="s1">{</span>
+            <span class="s1">num=</span><span class="s2">0</span><span class="s1">;</span>
+            <span class="s0">int </span><span class="s1">ans=JOptionPane.showConfirmDialog(doorPanel,</span><span class="s4">&quot;You have a key. Use it ?&quot;</span><span class="s1">, </span><span class="s4">&quot;Door&quot;</span><span class="s1">, YES_NO_OPTION );</span>
+            <span class="s0">if</span><span class="s1">(ans==JOptionPane.YES_OPTION){</span>
+                <span class="s1">doorLabel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                <span class="s1">doorLabel=showImage(</span><span class="s4">&quot;free.png&quot;</span><span class="s1">,doorPanel);</span>
+                <span class="s1">JButton nextButton=</span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;NEXT&quot;</span><span class="s1">);</span>
+                <span class="s1">JDialog freeDialog=catText(</span><span class="s4">&quot;Yay ! I'm finally free !!!!!!&quot;</span><span class="s1">, </span><span class="s4">&quot;catHappier.PNG&quot;</span><span class="s1">, nextButton);</span>
+                <span class="s1">nextButton.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                    <span class="s1">@Override</span>
+                    <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                        <span class="s1">freeDialog.dispose(); </span><span class="s3">// Close the dialog</span>
+                        <span class="s1">doorLabel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                        <span class="s1">doorLabel=showImage(</span><span class="s4">&quot;what.png&quot;</span><span class="s1">,doorPanel);</span>
+                        <span class="s1">JButton next2Button = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;NEXT&quot;</span><span class="s1">);</span>
+                        <span class="s1">JDialog waitDialog=catText(</span><span class="s4">&quot;Wait....... what ?&quot;</span><span class="s1">, </span><span class="s4">&quot;catShock.PNG&quot;</span><span class="s1">, next2Button);</span>
+                        <span class="s1">next2Button.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                            <span class="s1">@Override</span>
+                            <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                                <span class="s1">waitDialog.dispose();</span>
+                                <span class="s1">doorLabel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                                <span class="s1">doorLabel=showImage(</span><span class="s4">&quot;end.png&quot;</span><span class="s1">,doorPanel);</span>
+                                <span class="s1">JButton leave=createButton(</span><span class="s4">&quot;door.png&quot;</span><span class="s1">,</span><span class="s2">200</span><span class="s1">,</span><span class="s2">300</span><span class="s1">,doorLabel);</span>
+                                <span class="s1">leave.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                                    <span class="s1">@Override</span>
+                                    <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                                        <span class="s1">doorPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                                        <span class="s1">startPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                                    <span class="s1">}</span>
+                                <span class="s1">});</span>
+                            <span class="s1">}</span>
+                        <span class="s1">});</span>
+                        <span class="s1">waitDialog.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                    <span class="s1">}</span>
+                <span class="s1">});</span>
+            <span class="s1">}</span>
+            <span class="s0">else if</span><span class="s1">(ans==JOptionPane.NO_OPTION){</span>
+                <span class="s1">doorPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                <span class="s1">roomPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                <span class="s1">KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+    <span class="s0">private void </span><span class="s1">clockClicked(){</span>
+        <span class="s1">JPanel clockPanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+        <span class="s1">clockPanel.setLayout(</span><span class="s0">null</span><span class="s1">);</span>
+        <span class="s1">clockPanel.setSize(</span><span class="s2">800</span><span class="s1">,</span><span class="s2">600</span><span class="s1">);</span>
+        <span class="s1">baseFrame.add(clockPanel);</span>
+        <span class="s1">Icon clockIcon = </span><span class="s0">new </span><span class="s1">ImageIcon(</span><span class="s0">this</span><span class="s1">.getClass().getResource(</span><span class="s4">&quot;clock.GIF&quot;</span><span class="s1">));</span>
+        <span class="s1">JLabel label = </span><span class="s0">new </span><span class="s1">JLabel(clockIcon);</span>
+        <span class="s1">label.setBounds(</span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">, </span><span class="s2">800</span><span class="s1">, </span><span class="s2">600</span><span class="s1">);</span>
+        <span class="s1">clockPanel.add(label);</span>
+        <span class="s1">clockPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+        <span class="s1">leaveButton(clockPanel,roomPanel,label);</span>
+        <span class="s1">roomPanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+    <span class="s1">}</span>
+    <span class="s0">private void </span><span class="s1">bedTableClicked(){</span>
+        <span class="s1">JPanel bedTablePanel=</span><span class="s0">new </span><span class="s1">JPanel();</span>
+        <span class="s1">JLabel bedTableLabel=showImage(</span><span class="s4">&quot;book.png&quot;</span><span class="s1">,roomPanel,bedTablePanel);</span>
+        <span class="s1">JButton ok=</span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;OK&quot;</span><span class="s1">);</span>
+        <span class="s0">if </span><span class="s1">(bTable==</span><span class="s2">0</span><span class="s1">) {</span>
+            <span class="s1">JDialog bedTableDialog = catText(</span><span class="s4">&quot;This is a weird book, all the pages are ripped out except for this one.&quot;</span><span class="s1">, </span><span class="s4">&quot;catUgh.png&quot;</span><span class="s1">, ok);</span>
+            <span class="s1">ok.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                    <span class="s1">bedTableDialog.dispose();</span>
+                    <span class="s1">bTable = </span><span class="s2">1</span><span class="s1">;</span>
+                    <span class="s1">bedTablePanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                    <span class="s1">roomPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                <span class="s1">}</span>
+            <span class="s1">});</span>
+        <span class="s1">}</span>
+        <span class="s0">else</span><span class="s1">{</span>
+            <span class="s1">JDialog bedTableDialog = catText(</span><span class="s4">&quot;Hm...maybe these colours can help me escape.&quot;</span><span class="s1">, </span><span class="s4">&quot;catHm.PNG&quot;</span><span class="s1">, ok);</span>
+            <span class="s1">ok.addActionListener(</span><span class="s0">new </span><span class="s1">ActionListener() {</span>
+                <span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) {</span>
+                    <span class="s1">bedTableDialog.dispose();</span>
+                    <span class="s1">bTable=</span><span class="s2">0</span><span class="s1">;</span>
+                    <span class="s1">bedTablePanel.setVisible(</span><span class="s0">false</span><span class="s1">);</span>
+                    <span class="s1">roomPanel.setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+                <span class="s1">}</span>
+            <span class="s1">});</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

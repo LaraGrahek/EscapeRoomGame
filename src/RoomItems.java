@@ -4,16 +4,35 @@ import javax.swing.*;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+
+/***
+ * Class that represents items in the room, and contains common methods and properties across all items.
+ * Customized by two classes.
+ */
 public class RoomItems {
     protected JLabel roomLabel;
     protected JFrame baseFrame;
     protected JPanel roomPanel;
 
+    /**
+     * Constructor that sets values of frame, label and panel
+     * @param frame
+     * @param label
+     * @param panel
+     */
     RoomItems(JFrame frame, JLabel label, JPanel panel){
         baseFrame=frame;
         roomLabel=label;
         roomPanel=panel;
     }
+
+    /**
+     * Creates and returns JLabel with image represented by imageName, added to newPanel. Hides ogPanel.
+     * @param imageName name of the image to show
+     * @param ogPanel panel to hide
+     * @param newPanel new panel to add
+     * @return JLabel representing image
+     */
     protected JLabel showImage(String imageName,JPanel ogPanel, JPanel newPanel){
         ImageIcon image = new ImageIcon(getClass().getResource(imageName));
         Image pic = image.getImage();
@@ -31,6 +50,12 @@ public class RoomItems {
         ogPanel.setVisible(false);
         return imageLabel;
     }
+    /**
+     * Creates and returns JLabel with image represented by imageName, added to panel.
+     * @param imageName name of the image to show
+     * @param panel new panel to add
+     * @return JLabel representing image
+     */
     protected JLabel showImage(String imageName,JPanel panel){
         ImageIcon image = new ImageIcon(getClass().getResource(imageName));
         Image pic = image.getImage();
@@ -44,6 +69,15 @@ public class RoomItems {
         panel.add(imageLabel);
         return imageLabel;
     }
+
+    /**
+     *
+     * @param imageName name of the image file to show in button
+     * @param x x part of bounds
+     * @param y y part of bounds
+     * @param label JLabel to add the button to
+     * @return JButton with bounds given by x and y, image and label given by imageName and label
+     */
     protected JButton createButton(String imageName, int x, int y, JLabel label){
         JButton button=new JButton(new ImageIcon(getClass().getResource(imageName)));
         button.setBounds(x,y, button.getIcon().getIconWidth(), button.getIcon().getIconHeight());
@@ -55,6 +89,14 @@ public class RoomItems {
         label.add(button);
         return button;
     }
+
+    /**
+     * Create dialog with given message, image and button
+     * @param message String message to show
+     * @param imageName file name of image
+     * @param button JButton to add to the dialog
+     * @return JDialog
+     */
     protected JDialog catText(String message, String imageName,JButton button){
         JDialog catDialog = new JDialog(baseFrame, "You");
         Image pic = (new ImageIcon(getClass().getResource(imageName))).getImage();
@@ -70,7 +112,7 @@ public class RoomItems {
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         int frameX = baseFrame.getLocation().x+100;
-        int frameY = baseFrame.getLocation().y+350;
+        int frameY = baseFrame.getLocation().y+400;
 
         catDialog.setLocation(frameX,frameY);
         catDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -80,6 +122,13 @@ public class RoomItems {
         catDialog.setVisible(true);
         return catDialog;
     }
+    /**
+     * Create dialog with given message, title and button
+     * @param message String message to show
+     * @param title title of the dialog
+     * @param button JButton to add to the dialog
+     * @return JDialog
+     */
     protected JDialog msgText(String message, String title, JButton button){
         JDialog msgDialog=new JDialog(baseFrame,title);
         msgDialog.setPreferredSize(new Dimension(500, 100)); //size of dialog
@@ -89,7 +138,7 @@ public class RoomItems {
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         int frameX = baseFrame.getLocation().x+150;
-        int frameY = baseFrame.getLocation().y+450;
+        int frameY = baseFrame.getLocation().y+400;
 
         msgDialog.setLocation(frameX,frameY);
         msgDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
