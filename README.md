@@ -1,5 +1,5 @@
 # EscapeRoomGame
-Lara's Summative poject for ICS3U grade 11 computer science
+Summative project for ICS3U grade 11 computer science
 
-instructions:
+Instructions:
 Launch from main
