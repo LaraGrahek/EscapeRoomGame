@@ -1,5 +1,5 @@
 # EscapeRoomGame
-Summative project for ICS3U grade 11 computer science
+ICS3U summative project 2024
 
 Instructions:
 Launch from main
